@@ -1,0 +1,75 @@
+name: Pull Request Check
+
+on: [pull_request]
+
+jobs:
+  prcheck:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.22'
+
+      # 读取 gofumpt 二进制文件缓存
+      - name: Read gofumpt binary Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/bin/gofumpt
+          key: ${{ runner.os }}-gofumpt
+          restore-keys: |
+            ${{ runner.os }}-gofumpt
+
+      # 如果无缓存则下载
+      - name: Install gofumpt
+        if: steps.cache-gofumpt.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.local/bin
+          go install mvdan.cc/gofumpt@latest
+
+      # 读取 golangci-lint 缓存
+      - name: Read golangci-lint binary Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.local/bin/golangci-lint
+          key: ${{ runner.os }}-golangci-lint
+          restore-keys: |
+            ${{ runner.os }}-golangci-lint
+
+      # 安装 golangci-lint
+      - name: Install golangci-lint
+        if: steps.cache-golangci-lint.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.local/bin
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.63.4
+
+      - name: Go Mod Tidy
+        run: ./scripts/tidy.sh
+
+      - name: Run Go Test
+        run: ./scripts/test.sh
+
+      - name: Run Go Lint
+        run: ./scripts/lint.sh
+
+      # 缓存 gosec
+      # - name: Cache gosec binary
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.local/bin/gosec
+      #     key: ${{ runner.os }}-gosec-${{ hashFiles('go.mod', 'go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gosec-
+
+      # - name: Install gosec
+      #   if: steps.cache-gosec.outputs.cache-hit != 'true'
+      #   run: |
+      #     go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+
+      # - name: Check for vulnerabilities with GoSec
+      #   run: gosec ./...
