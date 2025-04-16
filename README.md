@@ -11,6 +11,47 @@
 1. 在 handler.go 里实现接口
 2. 在 biz/bll 里写业务逻辑代码
 
+# 提交流程
+### 1. 创建 Issue（可选）
+描述要实现的功能或者修复的bug。
+
+### 2. 创建本地开发分支
+进入你本地的Git仓库，并确保你在`main`分支上。然后，创建一个新的开发分支，例如`feature/user-auth`：
+
+```bash
+git checkout main               # 切换到 main 分支
+git pull origin main             # 拉取最新的 main 分支
+git checkout -b feature/user-auth # 创建并切换到开发分支
+```
+
+### 3. 开发和提交代码
+在新的分支上进行功能开发。开发完成后，使用以下命令将更改提交到本地仓库：
+
+```bash
+git add .                        # 添加所有更改文件
+git commit -m "Add user login and registration functionality" # 提交
+git push origin feature/user-auth # 推送到远程仓库的 feature/user-auth 分支
+```
+
+### 4. 创建 Pull Request (PR)
+在GitHub上，切换到你的远程仓库，进入“Pull requests”页面，点击“New pull request”：
+
+- 选择你开发的分支（例如`feature/user-auth`。
+- 在PR的标题和描述中，简要说明这次提交的功能。
+- 然后点击“Create pull request”。
+
+### 5. 等待代码审查
+提交PR后，其他团队成员可以审查你的代码。如果没有问题，他们会合并你的代码。如果有修改意见，进行修改后再次提交PR。
+
+### 6. 合并和清理
+一旦PR合并完成，你可以删除本地分支：
+
+```bash
+git checkout main               # 切换回 main 分支
+git branch -d feature/user-auth  # 删除本地分支
+git push origin --delete feature/user-auth # 删除远程分支
+```
+
 # 目录结构
 写的差不多了再改成树的形式
 ```
@@ -53,8 +94,7 @@ cd rpc
 
 kitex -module=github.com/bitdance-panic/gobuy/app/rpc idl/user.thrift
 ```
-业务只需要写handler即可
-照着user里的写就行
+业务只需要写handler即可 照着user里的写就行
 
 
 ## swagger
