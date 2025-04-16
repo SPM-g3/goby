@@ -1,5 +1,15 @@
 # 介绍
 
+# 开发流程
+#### gateway
+在 main.go 的 registerRoutes 定义接口
+在 hadlers 文件夹里将调用rpc将请求转发给各services
+#### rpc
+在 idl 文件定义请求req，resp和函数
+使用 `make gensvc svc=...` 生成代码
+#### sevices
+在 handler.go 里实现接口
+在 biz/bll 里写业务逻辑代码
 
 # 目录结构
 写的差不多了再改成树的形式
