@@ -117,6 +117,9 @@ struct SearchProductsReq {
     2: string category;
     3: i32 page_num;
     4: i32 page_size;
+    5: optional i64 min_price,
+    6: optional i64 max_price,
+    7: optional string brand
 }
 
 struct SearchProductsResp {

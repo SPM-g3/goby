@@ -332,27 +332,21 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 	var startTime, endTime time.Time
 	var err error
 
-	if *req.StartDate != "" {
+	if req.IsSetStartDate() {
 		startTime, err = time.Parse("2006-01-02", *req.StartDate)
 		if err != nil {
 			return nil, errors.New("invalid start date format")
 		}
+	} else {
+		startTime, err = time.Parse("2006-01-02", "2000-01-01")
 	}
 
-	if *req.EndDate != "" {
+	if req.IsSetEndDate() {
 		endTime, err = time.Parse("2006-01-02", *req.EndDate)
 		if err != nil {
 			return nil, errors.New("invalid end date format")
 		}
-	}
-
-	// 如果未提供开始时间，默认为2000-01-01
-	if *req.StartDate == "" {
-		startTime, err = time.Parse("2006-01-02", "2000-01-01")
-	}
-
-	// 如果未提供结束时间，默认为当前时间
-	if *req.EndDate == "" {
+	} else {
 		endTime = time.Now()
 	}
 

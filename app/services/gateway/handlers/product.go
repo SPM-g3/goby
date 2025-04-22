@@ -121,35 +121,58 @@ func HandleSearchProducts(ctx context.Context, c *app.RequestContext) {
 	pageSizeStr := c.Query("size")
 	pageNum, err := strconv.Atoi(pageNumStr)
 	if err != nil {
-		utils.Fail(c, err.Error())
+		utils.Fail(c, "Invalid page parameter")
 		return
 	}
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil {
-		utils.Fail(c, err.Error())
+		utils.Fail(c, "Invalid size parameter")
 		return
 	}
-	// var body struct {
-	// 	Query string `json:"query"`
-	// }
-	// err = c.Bind(&body)
-	// if err != nil {
-	// 	utils.Fail(c, err.Error())
-	// 	return
-	// }
+
 	query := c.Query("query")
 	category := c.Query("category")
+	minPriceStr := c.Query("min_price")
+	maxPriceStr := c.Query("max_price")
+	brand := c.Query("brand")
+
+	// 将 min_price 和 max_price 从字符串转换为浮点数
+	var minPrice int64
+	var maxPrice int64
+	if minPriceStr != "" {
+		minPrice, err = strconv.ParseInt(minPriceStr, 10, 64)
+		if err != nil {
+			utils.Fail(c, "Invalid min_price parameter")
+			return
+		}
+	}
+	if maxPriceStr != "" {
+		maxPrice, err = strconv.ParseInt(maxPriceStr, 10, 64)
+		if err != nil {
+			utils.Fail(c, "Invalid max_price parameter")
+			return
+		}
+	}
+
+	// 构造 SearchProductsReq 请求对象
 	req := rpc_product.SearchProductsReq{
 		Query:    query,
 		Category: category,
 		PageNum:  int32(pageNum),
 		PageSize: int32(pageSize),
+		MinPrice: &minPrice,
+		MaxPrice: &maxPrice,
+		Brand:    &brand,
 	}
+
+	// 调用 RPC 客户端进行搜索
 	resp, err := clients.ProductClient.SearchProducts(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
 	if err != nil {
 		utils.Fail(c, err.Error())
 		return
 	}
+
+	// 返回成功响应
 	utils.Success(c, utils.H{"products": resp.Products, "total_count": resp.TotalCount})
 }
 

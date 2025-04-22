@@ -2,6 +2,7 @@ package bll
 
 import (
 	"context"
+	"math"
 	"strconv"
 	"time"
 
@@ -113,14 +114,40 @@ func RemoveProduct(ctx context.Context, req *rpc_product.RemoveProductReq) (*rpc
 }
 
 func SearchProducts(ctx context.Context, req *rpc_product.SearchProductsReq) (*rpc_product.SearchProductsResp, error) {
-	products, total, err := dao.Search(tidb.DB, req.Query, req.Category, int(req.PageNum), int(req.PageSize))
+	// 处理 minPrice 的默认值
+	minPrice := 0
+	if !req.IsSetMinPrice() {
+		minPrice = 0
+	} else {
+		minPrice = int(req.GetMinPrice())
+	}
+
+	// 处理 maxPrice 的默认值
+	maxPrice := 0
+	if !req.IsSetMaxPrice() {
+		maxPrice = math.MaxInt32
+	} else {
+		maxPrice = int(req.GetMaxPrice())
+	}
+
+	// 处理 brand 参数
+	brand := ""
+	if !req.IsSetBrand() {
+		brand = ""
+	} else {
+		brand = req.GetBrand()
+	}
+
+	products, total, err := dao.Search(tidb.DB, req.Query, req.Category, int(req.PageNum), int(req.PageSize), minPrice, maxPrice, brand)
 	if err != nil {
 		return nil, err
 	}
+
 	protoProducts := make([]*rpc_product.Product, 0, len(products))
 	for _, p := range products {
 		protoProducts = append(protoProducts, convertToProtoProduct(&p))
 	}
+
 	return &rpc_product.SearchProductsResp{
 		Products:   protoProducts,
 		TotalCount: total,

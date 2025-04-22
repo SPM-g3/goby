@@ -84,14 +84,9 @@ func Remove(db *gorm.DB, id int) error {
 	return nil
 }
 
-func Search(db *gorm.DB, query string, category string, pageNum int, pageSize int) ([]Product, int64, error) {
+func Search(db *gorm.DB, query string, category string, pageNum int, pageSize int, minPrice int, maxPrice int, brand string) ([]Product, int64, error) {
 	var products []Product
 	searchQuery := "%" + query + "%"
-	// if err := db.Limit(pageSize).Offset((pageNum-1)*pageSize).Where("is_deleted = ? AND (name LIKE ? OR description LIKE ?)", false, searchQuery, searchQuery).Find(&products).Error; err != nil {
-	// 	return nil, 0, err
-	// }
-	// var count int64
-	// db.Model(&Product{}).Where("is_deleted = ? AND (name LIKE ? OR description LIKE ?)", false, searchQuery, searchQuery).Count(&count)
 
 	// 构建查询条件
 	queryBuilder := db.Limit(pageSize).Offset((pageNum-1)*pageSize).
@@ -100,6 +95,14 @@ func Search(db *gorm.DB, query string, category string, pageNum int, pageSize in
 	// 如果 category 不为空，则添加 category 筛选条件
 	if category != "" {
 		queryBuilder = queryBuilder.Where("category = ?", category)
+	}
+
+	queryBuilder = queryBuilder.Where("price BETWEEN ? AND ?", minPrice, maxPrice)
+
+	// 如果 brand 不为空，则添加品牌筛选条件
+	if brand != "" {
+		brandQuery := "%" + brand + "%"
+		queryBuilder = queryBuilder.Where("name LIKE ?", brandQuery)
 	}
 
 	// 执行查询
@@ -111,6 +114,13 @@ func Search(db *gorm.DB, query string, category string, pageNum int, pageSize in
 	countQuery := db.Model(&Product{}).Where("is_deleted = ? AND (name LIKE ? OR description LIKE ?)", false, searchQuery, searchQuery)
 	if category != "" {
 		countQuery = countQuery.Where("category = ?", category)
+	}
+
+	countQuery = countQuery.Where("price BETWEEN ? AND ?", minPrice, maxPrice)
+
+	if brand != "" {
+		brandQuery := "%" + brand + "%"
+		countQuery = countQuery.Where("name LIKE ?", brandQuery)
 	}
 	var count int64
 	countQuery.Count(&count)
