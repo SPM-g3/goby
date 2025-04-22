@@ -367,3 +367,31 @@ func HandleGetUserAddress(ctx context.Context, c *app.RequestContext) {
 	}
 	utils.Success(c, utils.H{"userAddress": resp.UserAddresses})
 }
+
+func HandleGenerateSalesReport(ctx context.Context, c *app.RequestContext) {
+
+	var req rpc_order.SalesReportReq
+
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
+
+	if startDate != "" {
+		req.StartDate = &startDate
+	}
+	if endDate != "" {
+		req.EndDate = &endDate
+	}
+
+	resp, err := clients.OrderClient.GetSalesReport(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
+	if err != nil {
+		utils.Fail(c, err.Error())
+		return
+	}
+
+	utils.Success(c, utils.H{
+		"total_revenue":     resp.TotalRevenue,
+		"order_count":       resp.OrderCount,
+		"top_products":      resp.TopProducts,
+		"average_order_amt": resp.AverageOrderAmt,
+	})
+}

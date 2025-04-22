@@ -15,6 +15,10 @@ func init() {
 
 type OrderServiceImpl struct{}
 
+func (i *OrderServiceImpl) GetSalesReport(ctx context.Context, req *rpc_order.SalesReportReq) (r *rpc_order.SalesReportResp, err error) {
+	return orderBll.GenerateSalesReport(ctx, req)
+}
+
 func (*OrderServiceImpl) CreateOrder(ctx context.Context, req *rpc_order.CreateOrderReq) (*rpc_order.CreateOrderResp, error) {
 	return orderBll.CreateOrder(ctx, req)
 }

@@ -245,3 +245,9 @@ func (s *OrderServiceImpl) UpdateOrderDiscount(ctx context.Context, req *order.U
 	// TODO: Your code here...
 	return
 }
+
+// GetSalesReport implements the OrderServiceImpl interface.
+func (s *OrderServiceImpl) GetSalesReport(ctx context.Context, req *order.SalesReportReq) (resp *order.SalesReportResp, err error) {
+	// TODO: Your code here...
+	return
+}

@@ -2,11 +2,11 @@ package dao
 
 import (
 	"fmt"
-
 	"github.com/bitdance-panic/gobuy/app/consts"
 	"github.com/bitdance-panic/gobuy/app/models"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"time"
 )
 
 type (
@@ -134,4 +134,19 @@ func GetUserAddress(db *gorm.DB, userID int32) ([]models.UserAddress, error) {
 		return nil, err
 	}
 	return addresses, nil
+}
+
+// 根据时间范围返回order数组
+func ListOrderByDateRange(db *gorm.DB, startTime, endTime time.Time) (*[]Order, error) {
+	var orders []Order
+
+	err := db.Where("created_at >= ? AND created_at <= ?", startTime, endTime).
+		Preload("Items").
+		Find(&orders).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &orders, nil
 }

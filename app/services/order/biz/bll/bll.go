@@ -3,6 +3,7 @@ package bll
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/bitdance-panic/gobuy/app/consts"
 
@@ -325,4 +326,77 @@ func (bll *OrderBLL) GetUserAddress(ctx context.Context, req *rpc_order.GetUserA
 	return &rpc_order.GetUserAddressResp{
 		UserAddresses: rpcAddresses,
 	}, nil
+}
+
+func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.SalesReportReq) (*rpc_order.SalesReportResp, error) {
+	var startTime, endTime time.Time
+	var err error
+
+	if *req.StartDate != "" {
+		startTime, err = time.Parse("2006-01-02", *req.StartDate)
+		if err != nil {
+			return nil, errors.New("invalid start date format")
+		}
+	}
+
+	if *req.EndDate != "" {
+		endTime, err = time.Parse("2006-01-02", *req.EndDate)
+		if err != nil {
+			return nil, errors.New("invalid end date format")
+		}
+	}
+
+	// 如果未提供开始时间，默认为2000-01-01
+	if *req.StartDate == "" {
+		startTime, err = time.Parse("2006-01-02", "2000-01-01")
+	}
+
+	// 如果未提供结束时间，默认为当前时间
+	if *req.EndDate == "" {
+		endTime = time.Now()
+	}
+
+	// 调用 DAO 层获取订单数据
+	orders, err := dao.ListOrderByDateRange(tidb.DB, startTime, endTime)
+	if err != nil {
+		return nil, err
+	}
+
+	// 分析订单数据
+	totalRevenue := 0.0
+	orderCount := len(*orders)
+	productSales := make(map[string]int) // 产品销量统计
+
+	for _, order := range *orders {
+		// 累加总销售额
+		totalRevenue += order.TotalPrice
+
+		// 统计每个产品的销量
+		for _, item := range order.Items {
+			productName := item.ProductName
+			productSales[productName] += item.Quantity
+		}
+	}
+
+	// 计算平均订单金额
+	averageOrderAmt := 0.0
+	if orderCount > 0 {
+		averageOrderAmt = totalRevenue / float64(orderCount)
+	}
+
+	// 找出最畅销的产品及其销量
+	topProducts := make(map[string]int32)
+	for productName, quantity := range productSales {
+		topProducts[productName] = int32(quantity)
+	}
+
+	// 构造结果
+	resp := &rpc_order.SalesReportResp{
+		TotalRevenue:    totalRevenue,
+		OrderCount:      int32(orderCount),
+		TopProducts:     topProducts,
+		AverageOrderAmt: averageOrderAmt,
+	}
+
+	return resp, nil
 }

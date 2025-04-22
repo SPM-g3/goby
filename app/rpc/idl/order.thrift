@@ -1,5 +1,21 @@
 namespace go order
 
+service OrderService{
+    CreateOrderResp createOrder(1: CreateOrderReq req);
+    UpdateOrderStatusResp updateOrderStatus(1: UpdateOrderStatusReq req);
+    UpdateOrderAddressResp updateOrderAddress(1:UpdateOrderAddressReq req);
+    GetOrderResp getOrder(1: GetOrderReq req);
+    ListOrderResp listUserOrder(1: ListOrderReq req);
+    ListOrderResp adminListOrder(1: ListOrderReq req);
+    CreateUserAddressResp createUserAddress(1: CreateUserAddressReq req);
+    DeleteUserAddressResp deleteUserAddress(1: DeleteUserAddressReq req);
+    UpdateUserAddressResp updateUserAddress(1: UpdateUserAddressReq req);
+    GetUserAddressResp getUserAddress(1: GetUserAddressReq req);
+    UpdateOrderTrackingResp UpdateOrderTracking(1: UpdateOrderTrackingReq req);
+    UpdateOrderDiscountResp UpdateOrderDiscount(1: UpdateOrderDiscountReq req);
+    SalesReportResp GetSalesReport(1: SalesReportReq req);
+}
+
 struct OrderItem{
     1: i32 order_id;
     2: i32 product_id;
@@ -84,21 +100,6 @@ struct UpdateOrderTrackingResp{
     1: bool success;
 }
 
-service OrderService{
-    CreateOrderResp createOrder(1: CreateOrderReq req);
-    UpdateOrderStatusResp updateOrderStatus(1: UpdateOrderStatusReq req);
-    UpdateOrderAddressResp updateOrderAddress(1:UpdateOrderAddressReq req);
-    GetOrderResp getOrder(1: GetOrderReq req);
-    ListOrderResp listUserOrder(1: ListOrderReq req);
-    ListOrderResp adminListOrder(1: ListOrderReq req);
-    CreateUserAddressResp createUserAddress(1: CreateUserAddressReq req);
-    DeleteUserAddressResp deleteUserAddress(1: DeleteUserAddressReq req);
-    UpdateUserAddressResp updateUserAddress(1: UpdateUserAddressReq req);
-    GetUserAddressResp getUserAddress(1: GetUserAddressReq req);
-    UpdateOrderTrackingResp UpdateOrderTracking(1: UpdateOrderTrackingReq req);
-    UpdateOrderDiscountResp UpdateOrderDiscount(1: UpdateOrderDiscountReq req);
-}
-
 struct UpdateOrderDiscountReq {
     1: i32 order_id;
     2: double discount;
@@ -150,4 +151,16 @@ struct GetOrderReq{
 }
 struct GetOrderResp{
     1: Order order;
+}
+
+struct SalesReportReq {
+    1: optional string start_date, // 可选参数，用于过滤开始日期
+    2: optional string end_date    // 可选参数，用于过滤结束日期
+}
+
+struct SalesReportResp {
+    1: required double total_revenue,
+    2: required i32 order_count,
+    3: optional map<string, i32> top_products // 最畅销的产品及其销量
+    4: required double average_orderAmt // 平均订单金额
 }

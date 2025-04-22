@@ -212,7 +212,6 @@ func registerRoutes(h *server.Hertz) {
 	}
 	productGroup := h.Group("/product")
 	{
-		productGroup.POST("reviews", handlers.HandlePostProductReviews)
 		// 获取单个商品详情
 		productGroup.GET("/:id", handlers.HandleGetProduct)
 		// 获取商品评论
@@ -284,6 +283,7 @@ func registerRoutes(h *server.Hertz) {
 			// TODO 获取所有的订单(分页)（订单包括支付信息）
 			adminOrderGroup.GET("/list", handlers.HandleAdminListOrder)
 			adminOrderGroup.PUT("/:id/:tracking_number", handlers.HandleUpdateOrderTracking)
+			adminOrderGroup.GET("/report", handlers.HandleGenerateSalesReport)
 		}
 	}
 }
