@@ -56,3 +56,7 @@ func (*ProductServiceImpl) GetActivePromotions(ctx context.Context) (*rpc_produc
 func (*ProductServiceImpl) DeletePromotion(ctx context.Context, req *rpc_product.DeletePromotionReq) (*rpc_product.DeletePromotionResp, error) {
 	return bll.DeletePromotion(ctx, req)
 }
+
+func (*ProductServiceImpl) CheckStock(ctx context.Context, req *rpc_product.CheckStockReq) (*rpc_product.CheckStockResp, error) {
+	return bll.CheckStock(ctx, req)
+}

@@ -1252,6 +1252,100 @@ var fieldIDToName_CreatePromotionResp = map[int16]string{
 	1: "success",
 }
 
+type CheckStockReq struct {
+	MinStock *int32 `thrift:"min_stock,1,optional" frugal:"1,optional,i32" json:"min_stock,omitempty"`
+	MaxStock *int32 `thrift:"max_stock,2,optional" frugal:"2,optional,i32" json:"max_stock,omitempty"`
+}
+
+func NewCheckStockReq() *CheckStockReq {
+	return &CheckStockReq{}
+}
+
+func (p *CheckStockReq) InitDefault() {
+}
+
+var CheckStockReq_MinStock_DEFAULT int32
+
+func (p *CheckStockReq) GetMinStock() (v int32) {
+	if !p.IsSetMinStock() {
+		return CheckStockReq_MinStock_DEFAULT
+	}
+	return *p.MinStock
+}
+
+var CheckStockReq_MaxStock_DEFAULT int32
+
+func (p *CheckStockReq) GetMaxStock() (v int32) {
+	if !p.IsSetMaxStock() {
+		return CheckStockReq_MaxStock_DEFAULT
+	}
+	return *p.MaxStock
+}
+func (p *CheckStockReq) SetMinStock(val *int32) {
+	p.MinStock = val
+}
+func (p *CheckStockReq) SetMaxStock(val *int32) {
+	p.MaxStock = val
+}
+
+func (p *CheckStockReq) IsSetMinStock() bool {
+	return p.MinStock != nil
+}
+
+func (p *CheckStockReq) IsSetMaxStock() bool {
+	return p.MaxStock != nil
+}
+
+func (p *CheckStockReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CheckStockReq(%+v)", *p)
+}
+
+var fieldIDToName_CheckStockReq = map[int16]string{
+	1: "min_stock",
+	2: "max_stock",
+}
+
+type CheckStockResp struct {
+	Products        []*Product `thrift:"products,1" frugal:"1,default,list<Product>" json:"products"`
+	LowStockWarning bool       `thrift:"low_stock_warning,2,required" frugal:"2,required,bool" json:"low_stock_warning"`
+}
+
+func NewCheckStockResp() *CheckStockResp {
+	return &CheckStockResp{}
+}
+
+func (p *CheckStockResp) InitDefault() {
+}
+
+func (p *CheckStockResp) GetProducts() (v []*Product) {
+	return p.Products
+}
+
+func (p *CheckStockResp) GetLowStockWarning() (v bool) {
+	return p.LowStockWarning
+}
+func (p *CheckStockResp) SetProducts(val []*Product) {
+	p.Products = val
+}
+func (p *CheckStockResp) SetLowStockWarning(val bool) {
+	p.LowStockWarning = val
+}
+
+func (p *CheckStockResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CheckStockResp(%+v)", *p)
+}
+
+var fieldIDToName_CheckStockResp = map[int16]string{
+	1: "products",
+	2: "low_stock_warning",
+}
+
 type ProductService interface {
 	CreateProduct(ctx context.Context, req *CreateProductReq) (r *CreateProductResp, err error)
 
@@ -1276,6 +1370,8 @@ type ProductService interface {
 	GetActivePromotions(ctx context.Context) (r *GetActivePromotionsResp, err error)
 
 	DeletePromotion(ctx context.Context, req *DeletePromotionReq) (r *DeletePromotionResp, err error)
+
+	CheckStock(ctx context.Context, req *CheckStockReq) (r *CheckStockResp, err error)
 }
 
 type ProductServiceCreateProductArgs struct {
@@ -2149,5 +2245,81 @@ func (p *ProductServiceDeletePromotionResult) String() string {
 }
 
 var fieldIDToName_ProductServiceDeletePromotionResult = map[int16]string{
+	0: "success",
+}
+
+type ProductServiceCheckStockArgs struct {
+	Req *CheckStockReq `thrift:"req,1" frugal:"1,default,CheckStockReq" json:"req"`
+}
+
+func NewProductServiceCheckStockArgs() *ProductServiceCheckStockArgs {
+	return &ProductServiceCheckStockArgs{}
+}
+
+func (p *ProductServiceCheckStockArgs) InitDefault() {
+}
+
+var ProductServiceCheckStockArgs_Req_DEFAULT *CheckStockReq
+
+func (p *ProductServiceCheckStockArgs) GetReq() (v *CheckStockReq) {
+	if !p.IsSetReq() {
+		return ProductServiceCheckStockArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *ProductServiceCheckStockArgs) SetReq(val *CheckStockReq) {
+	p.Req = val
+}
+
+func (p *ProductServiceCheckStockArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *ProductServiceCheckStockArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProductServiceCheckStockArgs(%+v)", *p)
+}
+
+var fieldIDToName_ProductServiceCheckStockArgs = map[int16]string{
+	1: "req",
+}
+
+type ProductServiceCheckStockResult struct {
+	Success *CheckStockResp `thrift:"success,0,optional" frugal:"0,optional,CheckStockResp" json:"success,omitempty"`
+}
+
+func NewProductServiceCheckStockResult() *ProductServiceCheckStockResult {
+	return &ProductServiceCheckStockResult{}
+}
+
+func (p *ProductServiceCheckStockResult) InitDefault() {
+}
+
+var ProductServiceCheckStockResult_Success_DEFAULT *CheckStockResp
+
+func (p *ProductServiceCheckStockResult) GetSuccess() (v *CheckStockResp) {
+	if !p.IsSetSuccess() {
+		return ProductServiceCheckStockResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ProductServiceCheckStockResult) SetSuccess(x interface{}) {
+	p.Success = x.(*CheckStockResp)
+}
+
+func (p *ProductServiceCheckStockResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ProductServiceCheckStockResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ProductServiceCheckStockResult(%+v)", *p)
+}
+
+var fieldIDToName_ProductServiceCheckStockResult = map[int16]string{
 	0: "success",
 }

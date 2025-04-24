@@ -53,6 +53,7 @@ service ProductService {
     CreatePromotionResp CreatePromotion(1: CreatePromotionReq req);
     GetActivePromotionsResp GetActivePromotions();
     DeletePromotionResp DeletePromotion(1: DeletePromotionReq req);
+    CheckStockResp CheckStock(1: CheckStockReq req);
 }
 
 struct DeletePromotionReq {
@@ -165,4 +166,14 @@ struct CreatePromotionReq {
 
 struct CreatePromotionResp {
     1:  bool success;
+}
+
+struct CheckStockReq {
+    1: optional i32 min_stock;
+    2: optional i32 max_stock;       
+}
+
+struct CheckStockResp {
+    1: list<Product> products;
+    2: required bool low_stock_warning;
 }

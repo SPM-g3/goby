@@ -97,6 +97,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"CheckStock": kitex.NewMethodInfo(
+		checkStockHandler,
+		newProductServiceCheckStockArgs,
+		newProductServiceCheckStockResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -379,6 +386,24 @@ func newProductServiceDeletePromotionResult() interface{} {
 	return product.NewProductServiceDeletePromotionResult()
 }
 
+func checkStockHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*product.ProductServiceCheckStockArgs)
+	realResult := result.(*product.ProductServiceCheckStockResult)
+	success, err := handler.(product.ProductService).CheckStock(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newProductServiceCheckStockArgs() interface{} {
+	return product.NewProductServiceCheckStockArgs()
+}
+
+func newProductServiceCheckStockResult() interface{} {
+	return product.NewProductServiceCheckStockResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -502,6 +527,16 @@ func (p *kClient) DeletePromotion(ctx context.Context, req *product.DeletePromot
 	_args.Req = req
 	var _result product.ProductServiceDeletePromotionResult
 	if err = p.c.Call(ctx, "DeletePromotion", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CheckStock(ctx context.Context, req *product.CheckStockReq) (r *product.CheckStockResp, err error) {
+	var _args product.ProductServiceCheckStockArgs
+	_args.Req = req
+	var _result product.ProductServiceCheckStockResult
+	if err = p.c.Call(ctx, "CheckStock", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

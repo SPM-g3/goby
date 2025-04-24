@@ -331,3 +331,28 @@ func HandleDeletePromotion(ctx context.Context, c *app.RequestContext) {
 	}
 	utils.Success(c, utils.H{"success": resp.Success})
 }
+
+func HandleCheckStock(ctx context.Context, c *app.RequestContext) {
+	var req rpc_product.CheckStockReq
+	if err := c.Bind(&req); err != nil {
+		utils.Fail(c, err.Error())
+		return
+	}
+	resp, err := clients.ProductClient.CheckStock(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
+	if err != nil {
+		utils.Fail(c, err.Error())
+		return
+	}
+	var products []map[string]interface{}
+	for _, p := range resp.Products {
+		products = append(products, map[string]interface{}{
+			"id":    p.Id,
+			"name":  p.Name,
+			"stock": p.Stock,
+		})
+	}
+	utils.Success(c, utils.H{
+		"products":          products,
+		"low_stock_warning": resp.LowStockWarning,
+	})
+}

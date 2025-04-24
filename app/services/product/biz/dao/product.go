@@ -2,7 +2,6 @@ package dao
 
 import (
 	"errors"
-
 	"gorm.io/gorm"
 
 	"github.com/bitdance-panic/gobuy/app/models"
@@ -88,29 +87,24 @@ func Search(db *gorm.DB, query string, category string, pageNum int, pageSize in
 	var products []Product
 	searchQuery := "%" + query + "%"
 
-	// 构建查询条件
 	queryBuilder := db.Limit(pageSize).Offset((pageNum-1)*pageSize).
 		Where("is_deleted = ? AND (name LIKE ? OR description LIKE ?)", false, searchQuery, searchQuery)
 
-	// 如果 category 不为空，则添加 category 筛选条件
 	if category != "" {
 		queryBuilder = queryBuilder.Where("category = ?", category)
 	}
 
 	queryBuilder = queryBuilder.Where("price BETWEEN ? AND ?", minPrice, maxPrice)
 
-	// 如果 brand 不为空，则添加品牌筛选条件
 	if brand != "" {
 		brandQuery := "%" + brand + "%"
 		queryBuilder = queryBuilder.Where("name LIKE ?", brandQuery)
 	}
 
-	// 执行查询
 	if err := queryBuilder.Find(&products).Error; err != nil {
 		return nil, 0, err
 	}
 
-	// 统计总数
 	countQuery := db.Model(&Product{}).Where("is_deleted = ? AND (name LIKE ? OR description LIKE ?)", false, searchQuery, searchQuery)
 	if category != "" {
 		countQuery = countQuery.Where("category = ?", category)
@@ -140,4 +134,26 @@ func GetActivePromotions(db *gorm.DB) ([]models.Promotion, error) {
 
 func DeletePromotion(db *gorm.DB, id int) error {
 	return db.Delete(&models.Promotion{}, id).Error
+}
+
+func GetProductsByStockRange(db *gorm.DB, minStock *int, maxStock *int) ([]Product, error) {
+	var products []Product
+
+	// 构建查询条件
+	query := db.Where("is_deleted = ?", false)
+
+	if minStock != nil {
+		query = query.Where("stock >= ?", *minStock)
+	}
+
+	if maxStock != nil {
+		query = query.Where("stock <= ?", *maxStock)
+	}
+
+	// 查询符合条件的商品
+	if err := query.Find(&products).Error; err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }

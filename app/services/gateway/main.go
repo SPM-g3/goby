@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net"
 	"strings"
@@ -15,21 +16,19 @@ import (
 	"github.com/bitdance-panic/gobuy/app/services/gateway/handlers"
 	"github.com/bitdance-panic/gobuy/app/services/gateway/middleware"
 	"github.com/bitdance-panic/gobuy/app/utils"
-	prometheus "github.com/hertz-contrib/monitor-prometheus"
-	"github.com/hertz-contrib/registry/consul"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/app/server/registry"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/hertz-contrib/cors"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	hertzobslogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
+	"github.com/hertz-contrib/registry/consul"
 	"github.com/hertz-contrib/swagger"
 	swaggerFiles "github.com/swaggo/files"
+	"go.uber.org/zap/zapcore"
 
 	consulapi "github.com/hashicorp/consul/api"
 )
@@ -266,6 +265,8 @@ func registerRoutes(h *server.Hertz) {
 			adminProductGroup.GET("/list", handlers.HandleAdminListProduct)
 			// 获取所有商品
 			adminProductGroup.GET("/listall", handlers.HandleListAllProduct)
+			// 根据库存查询商品
+			adminProductGroup.POST("/checkStock", handlers.HandleCheckStock)
 		}
 		adminUserGroup := adminGroup.Group("/user")
 		{

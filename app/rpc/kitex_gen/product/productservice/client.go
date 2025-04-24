@@ -23,6 +23,7 @@ type Client interface {
 	CreatePromotion(ctx context.Context, req *product.CreatePromotionReq, callOptions ...callopt.Option) (r *product.CreatePromotionResp, err error)
 	GetActivePromotions(ctx context.Context, callOptions ...callopt.Option) (r *product.GetActivePromotionsResp, err error)
 	DeletePromotion(ctx context.Context, req *product.DeletePromotionReq, callOptions ...callopt.Option) (r *product.DeletePromotionResp, err error)
+	CheckStock(ctx context.Context, req *product.CheckStockReq, callOptions ...callopt.Option) (r *product.CheckStockResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -112,4 +113,9 @@ func (p *kProductServiceClient) GetActivePromotions(ctx context.Context, callOpt
 func (p *kProductServiceClient) DeletePromotion(ctx context.Context, req *product.DeletePromotionReq, callOptions ...callopt.Option) (r *product.DeletePromotionResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.DeletePromotion(ctx, req)
+}
+
+func (p *kProductServiceClient) CheckStock(ctx context.Context, req *product.CheckStockReq, callOptions ...callopt.Option) (r *product.CheckStockResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CheckStock(ctx, req)
 }

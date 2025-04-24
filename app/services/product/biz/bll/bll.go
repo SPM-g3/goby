@@ -277,3 +277,45 @@ func DeletePromotion(ctx context.Context, req *rpc_product.DeletePromotionReq) (
 		Success: true,
 	}, nil
 }
+
+func CheckStock(ctx context.Context, req *rpc_product.CheckStockReq) (*rpc_product.CheckStockResp, error) {
+	// 处理 minStock 的默认值
+	minStock := 0
+	if !req.IsSetMinStock() {
+		minStock = 0
+	} else {
+		minStock = int(req.GetMinStock())
+	}
+
+	// 处理 maxStock 的默认值
+	maxStock := math.MaxInt32 // 如果未设置最大库存，默认为最大整数值
+	if !req.IsSetMaxStock() {
+		maxStock = math.MaxInt32
+	} else {
+		maxStock = int(req.GetMaxStock())
+	}
+
+	// 调用 DAO 层获取符合条件的商品列表
+	products, err := dao.GetProductsByStockRange(tidb.DB, &minStock, &maxStock)
+	if err != nil {
+		return nil, err
+	}
+
+	var protoProducts []*rpc_product.Product
+	lowStockWarning := false
+	for _, p := range products {
+		protoProduct := convertToProtoProduct(&p)
+		protoProducts = append(protoProducts, protoProduct)
+
+		// 判断是否存在低库存警告
+		if p.Stock <= 10 { // 假设低库存阈值为 10
+			lowStockWarning = true
+		}
+	}
+
+	// 构造返回的响应
+	return &rpc_product.CheckStockResp{
+		Products:        protoProducts,
+		LowStockWarning: lowStockWarning,
+	}, nil
+}

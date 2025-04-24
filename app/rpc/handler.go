@@ -251,3 +251,9 @@ func (s *OrderServiceImpl) GetSalesReport(ctx context.Context, req *order.SalesR
 	// TODO: Your code here...
 	return
 }
+
+// CheckStock implements the ProductServiceImpl interface.
+func (s *ProductServiceImpl) CheckStock(ctx context.Context, req *product.CheckStockReq) (resp *product.CheckStockResp, err error) {
+	// TODO: Your code here...
+	return
+}
