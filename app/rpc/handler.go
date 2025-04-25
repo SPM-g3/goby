@@ -78,6 +78,8 @@ func (s *OrderServiceImpl) GetUserAddress(ctx context.Context, req *order.GetUse
 	return
 }
 
+type UserServiceImpl struct{}
+
 // Register implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterReq) (resp *user.RegisterResp, err error) {
 	// TODO: Your code here...
@@ -125,6 +127,8 @@ func (s *UserServiceImpl) AdminListUser(ctx context.Context, req *user.AdminList
 	// TODO: Your code here...
 	return
 }
+
+type ProductServiceImpl struct{}
 
 // CreateProduct implements the ProductServiceImpl interface.
 func (s *ProductServiceImpl) CreateProduct(ctx context.Context, req *product.CreateProductReq) (resp *product.CreateProductResp, err error) {
@@ -191,6 +195,8 @@ func (s *ProductServiceImpl) GetProductReviews(ctx context.Context, req *product
 	// TODO: Your code here...
 	return
 }
+
+type CartServiceImpl struct{}
 
 // CreateItem implements the CartServiceImpl interface.
 func (s *CartServiceImpl) CreateItem(ctx context.Context, req *cart.CreateItemReq) (resp *cart.CreateItemResp, err error) {

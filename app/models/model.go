@@ -174,6 +174,14 @@ type Coupon struct {
 	UsedCount    int       // 已使用次数
 }
 
+type ChatMessage struct {
+	ID         int64     `json:"id"`
+	SenderID   int64     `json:"sender_id"`
+	ReceiverID int64     `json:"receiver_id"`
+	Content    string    `json:"content"`
+	Timestamp  time.Time `json:"timestamp"`
+}
+
 func (User) TableName() string {
 	return "user"
 }

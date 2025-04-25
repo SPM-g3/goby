@@ -250,6 +250,8 @@ func registerRoutes(h *server.Hertz) {
 	agentGroup := h.Group("/agent")
 	{
 		agentGroup.POST("/ask", handlers.HandleAskAgent)
+		agentGroup.POST("/sendMessage", handlers.HandleSendMessage)
+		agentGroup.GET("/getMessages", handlers.HistoryMessage)
 	}
 	adminGroup := h.Group("/admin")
 	{

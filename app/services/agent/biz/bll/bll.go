@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
-
+	"github.com/bitdance-panic/gobuy/app/models"
 	rpc_agent "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/agent"
+	"github.com/bitdance-panic/gobuy/app/services/agent/biz/dal/tidb"
+	"github.com/bitdance-panic/gobuy/app/services/agent/biz/dao"
 	chat_models "github.com/bitdance-panic/gobuy/app/services/agent/models"
 	"github.com/bitdance-panic/gobuy/app/services/agent/tools"
 	"github.com/bitdance-panic/gobuy/app/services/agent/utils"
@@ -15,6 +16,8 @@ import (
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/schema"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"log"
 )
 
 var agent compose.Runnable[map[string]any, string]
@@ -100,4 +103,37 @@ func Ask(ctx context.Context, req *rpc_agent.AskReq) (resp *rpc_agent.AskResp, e
 	return &rpc_agent.AskResp{
 		Content: msgs.Content,
 	}, nil
+}
+
+// SendMessage 发送消息
+func SendMessage(ctx context.Context, req *rpc_agent.ChatMessageReq) (*rpc_agent.ChatMessageResp, error) {
+	// 从请求对象中提取 senderID, receiverID 和 content
+	senderID := req.GetSenderId()
+	receiverID := req.GetReceiverId()
+	content := req.GetContent()
+
+	// 调用 DAO 层的方法保存消息到数据库
+	err := dao.SendMessage(tidb.DB, senderID, receiverID, content)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+// GetHistoryMessages 获取历史消息
+func GetHistoryMessages(ctx context.Context, req *rpc_agent.HistoryMessageReq) ([]models.ChatMessage, error) {
+	// 从请求对象中提取 senderID, receiverID 和 limit
+	senderID := req.GetSenderId()
+	receiverID := 1
+	limit := 50
+
+	// 调用 DAO 层的方法获取历史消息
+	messages, err := dao.GetHistoryMessages(tidb.DB, senderID, int64(receiverID), limit)
+	if err != nil {
+		klog.Errorf("Failed to fetch history messages: %v", err)
+		return nil, err
+	}
+
+	return messages, nil
 }
