@@ -287,6 +287,7 @@ func registerRoutes(h *server.Hertz) {
 			adminOrderGroup.GET("/list", handlers.HandleAdminListOrder)
 			adminOrderGroup.PUT("/:id/:tracking_number", handlers.HandleUpdateOrderTracking)
 			adminOrderGroup.GET("/report", handlers.HandleGenerateSalesReport)
+			adminOrderGroup.GET("/reportByDate", handlers.HandleGenerateSalesReportByDate)
 		}
 	}
 }

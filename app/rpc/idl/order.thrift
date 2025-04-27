@@ -14,6 +14,7 @@ service OrderService{
     UpdateOrderTrackingResp UpdateOrderTracking(1: UpdateOrderTrackingReq req);
     UpdateOrderDiscountResp UpdateOrderDiscount(1: UpdateOrderDiscountReq req);
     SalesReportResp GetSalesReport(1: SalesReportReq req);
+    SalesReportByDateResp GetSalesReportByDate(1: SalesReportByDateReq req);
 }
 
 struct OrderItem{
@@ -163,4 +164,11 @@ struct SalesReportResp {
     2: required i32 order_count,
     3: optional map<string, i32> top_products // 最畅销的产品及其销量
     4: required double average_orderAmt // 平均订单金额
+}
+
+struct SalesReportByDateReq {
+}
+
+struct SalesReportByDateResp {
+    1: optional map<string, double> date_revenue
 }

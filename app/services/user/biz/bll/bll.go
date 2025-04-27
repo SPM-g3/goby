@@ -14,7 +14,7 @@ import (
 
 // Register 业务逻辑：注册新用户
 func Register(ctx context.Context, req *rpc_user.RegisterReq) (*rpc_user.RegisterResp, error) {
-	user, err := dao.RegisterUser(tidb.DB, ctx, req.Username, req.Password, req.Email)
+	user, err := dao.RegisterUser(tidb.DB, ctx, req.Username, req.Password, req.Email, req.IsSeller)
 	if err != nil {
 		return nil, err
 	}

@@ -1267,6 +1267,63 @@ var fieldIDToName_SalesReportResp = map[int16]string{
 	4: "average_orderAmt",
 }
 
+type SalesReportByDateReq struct {
+}
+
+func NewSalesReportByDateReq() *SalesReportByDateReq {
+	return &SalesReportByDateReq{}
+}
+
+func (p *SalesReportByDateReq) InitDefault() {
+}
+
+func (p *SalesReportByDateReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SalesReportByDateReq(%+v)", *p)
+}
+
+var fieldIDToName_SalesReportByDateReq = map[int16]string{}
+
+type SalesReportByDateResp struct {
+	DateRevenue map[string]float64 `thrift:"date_revenue,1,optional" frugal:"1,optional,map<string:double>" json:"date_revenue,omitempty"`
+}
+
+func NewSalesReportByDateResp() *SalesReportByDateResp {
+	return &SalesReportByDateResp{}
+}
+
+func (p *SalesReportByDateResp) InitDefault() {
+}
+
+var SalesReportByDateResp_DateRevenue_DEFAULT map[string]float64
+
+func (p *SalesReportByDateResp) GetDateRevenue() (v map[string]float64) {
+	if !p.IsSetDateRevenue() {
+		return SalesReportByDateResp_DateRevenue_DEFAULT
+	}
+	return p.DateRevenue
+}
+func (p *SalesReportByDateResp) SetDateRevenue(val map[string]float64) {
+	p.DateRevenue = val
+}
+
+func (p *SalesReportByDateResp) IsSetDateRevenue() bool {
+	return p.DateRevenue != nil
+}
+
+func (p *SalesReportByDateResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SalesReportByDateResp(%+v)", *p)
+}
+
+var fieldIDToName_SalesReportByDateResp = map[int16]string{
+	1: "date_revenue",
+}
+
 type OrderService interface {
 	CreateOrder(ctx context.Context, req *CreateOrderReq) (r *CreateOrderResp, err error)
 
@@ -1293,6 +1350,8 @@ type OrderService interface {
 	UpdateOrderDiscount(ctx context.Context, req *UpdateOrderDiscountReq) (r *UpdateOrderDiscountResp, err error)
 
 	GetSalesReport(ctx context.Context, req *SalesReportReq) (r *SalesReportResp, err error)
+
+	GetSalesReportByDate(ctx context.Context, req *SalesReportByDateReq) (r *SalesReportByDateResp, err error)
 }
 
 type OrderServiceCreateOrderArgs struct {
@@ -2280,5 +2339,81 @@ func (p *OrderServiceGetSalesReportResult) String() string {
 }
 
 var fieldIDToName_OrderServiceGetSalesReportResult = map[int16]string{
+	0: "success",
+}
+
+type OrderServiceGetSalesReportByDateArgs struct {
+	Req *SalesReportByDateReq `thrift:"req,1" frugal:"1,default,SalesReportByDateReq" json:"req"`
+}
+
+func NewOrderServiceGetSalesReportByDateArgs() *OrderServiceGetSalesReportByDateArgs {
+	return &OrderServiceGetSalesReportByDateArgs{}
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) InitDefault() {
+}
+
+var OrderServiceGetSalesReportByDateArgs_Req_DEFAULT *SalesReportByDateReq
+
+func (p *OrderServiceGetSalesReportByDateArgs) GetReq() (v *SalesReportByDateReq) {
+	if !p.IsSetReq() {
+		return OrderServiceGetSalesReportByDateArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *OrderServiceGetSalesReportByDateArgs) SetReq(val *SalesReportByDateReq) {
+	p.Req = val
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("OrderServiceGetSalesReportByDateArgs(%+v)", *p)
+}
+
+var fieldIDToName_OrderServiceGetSalesReportByDateArgs = map[int16]string{
+	1: "req",
+}
+
+type OrderServiceGetSalesReportByDateResult struct {
+	Success *SalesReportByDateResp `thrift:"success,0,optional" frugal:"0,optional,SalesReportByDateResp" json:"success,omitempty"`
+}
+
+func NewOrderServiceGetSalesReportByDateResult() *OrderServiceGetSalesReportByDateResult {
+	return &OrderServiceGetSalesReportByDateResult{}
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) InitDefault() {
+}
+
+var OrderServiceGetSalesReportByDateResult_Success_DEFAULT *SalesReportByDateResp
+
+func (p *OrderServiceGetSalesReportByDateResult) GetSuccess() (v *SalesReportByDateResp) {
+	if !p.IsSetSuccess() {
+		return OrderServiceGetSalesReportByDateResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *OrderServiceGetSalesReportByDateResult) SetSuccess(x interface{}) {
+	p.Success = x.(*SalesReportByDateResp)
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("OrderServiceGetSalesReportByDateResult(%+v)", *p)
+}
+
+var fieldIDToName_OrderServiceGetSalesReportByDateResult = map[int16]string{
 	0: "success",
 }

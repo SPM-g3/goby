@@ -4952,6 +4952,191 @@ func (p *SalesReportResp) field4Length() int {
 	return l
 }
 
+func (p *SalesReportByDateReq) FastRead(buf []byte) (int, error) {
+
+	var err error
+	var offset int
+	var l int
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	for {
+		fieldTypeId, fieldId, l, err = thrift.Binary.ReadFieldBegin(buf[offset:])
+		offset += l
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+		offset += l
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+
+	return offset, nil
+ReadFieldBeginError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+SkipFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+}
+
+func (p *SalesReportByDateReq) FastWrite(buf []byte) int {
+	return p.FastWriteNocopy(buf, nil)
+}
+
+func (p *SalesReportByDateReq) FastWriteNocopy(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p != nil {
+	}
+	offset += thrift.Binary.WriteFieldStop(buf[offset:])
+	return offset
+}
+
+func (p *SalesReportByDateReq) BLength() int {
+	l := 0
+	if p != nil {
+	}
+	l += thrift.Binary.FieldStopLength()
+	return l
+}
+
+func (p *SalesReportByDateResp) FastRead(buf []byte) (int, error) {
+
+	var err error
+	var offset int
+	var l int
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	for {
+		fieldTypeId, fieldId, l, err = thrift.Binary.ReadFieldBegin(buf[offset:])
+		offset += l
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.MAP {
+				l, err = p.FastReadField1(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+			offset += l
+			if err != nil {
+				goto SkipFieldError
+			}
+		}
+	}
+
+	return offset, nil
+ReadFieldBeginError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SalesReportByDateResp[fieldId]), err)
+SkipFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+}
+
+func (p *SalesReportByDateResp) FastReadField1(buf []byte) (int, error) {
+	offset := 0
+
+	_, _, size, l, err := thrift.Binary.ReadMapBegin(buf[offset:])
+	offset += l
+	if err != nil {
+		return offset, err
+	}
+	_field := make(map[string]float64, size)
+	for i := 0; i < size; i++ {
+		var _key string
+		if v, l, err := thrift.Binary.ReadString(buf[offset:]); err != nil {
+			return offset, err
+		} else {
+			offset += l
+			_key = v
+		}
+
+		var _val float64
+		if v, l, err := thrift.Binary.ReadDouble(buf[offset:]); err != nil {
+			return offset, err
+		} else {
+			offset += l
+			_val = v
+		}
+
+		_field[_key] = _val
+	}
+	p.DateRevenue = _field
+	return offset, nil
+}
+
+func (p *SalesReportByDateResp) FastWrite(buf []byte) int {
+	return p.FastWriteNocopy(buf, nil)
+}
+
+func (p *SalesReportByDateResp) FastWriteNocopy(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p != nil {
+		offset += p.fastWriteField1(buf[offset:], w)
+	}
+	offset += thrift.Binary.WriteFieldStop(buf[offset:])
+	return offset
+}
+
+func (p *SalesReportByDateResp) BLength() int {
+	l := 0
+	if p != nil {
+		l += p.field1Length()
+	}
+	l += thrift.Binary.FieldStopLength()
+	return l
+}
+
+func (p *SalesReportByDateResp) fastWriteField1(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p.IsSetDateRevenue() {
+		offset += thrift.Binary.WriteFieldBegin(buf[offset:], thrift.MAP, 1)
+		mapBeginOffset := offset
+		offset += thrift.Binary.MapBeginLength()
+		var length int
+		for k, v := range p.DateRevenue {
+			length++
+			offset += thrift.Binary.WriteStringNocopy(buf[offset:], w, k)
+			offset += thrift.Binary.WriteDouble(buf[offset:], v)
+		}
+		thrift.Binary.WriteMapBegin(buf[mapBeginOffset:], thrift.STRING, thrift.DOUBLE, length)
+	}
+	return offset
+}
+
+func (p *SalesReportByDateResp) field1Length() int {
+	l := 0
+	if p.IsSetDateRevenue() {
+		l += thrift.Binary.FieldBeginLength()
+		l += thrift.Binary.MapBeginLength()
+		for k, v := range p.DateRevenue {
+			_, _ = k, v
+
+			l += thrift.Binary.StringLengthNocopy(k)
+			l += thrift.Binary.DoubleLength()
+		}
+	}
+	return l
+}
+
 func (p *OrderServiceCreateOrderArgs) FastRead(buf []byte) (int, error) {
 
 	var err error
@@ -7526,6 +7711,204 @@ func (p *OrderServiceGetSalesReportResult) field0Length() int {
 	return l
 }
 
+func (p *OrderServiceGetSalesReportByDateArgs) FastRead(buf []byte) (int, error) {
+
+	var err error
+	var offset int
+	var l int
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	for {
+		fieldTypeId, fieldId, l, err = thrift.Binary.ReadFieldBegin(buf[offset:])
+		offset += l
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				l, err = p.FastReadField1(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+			offset += l
+			if err != nil {
+				goto SkipFieldError
+			}
+		}
+	}
+
+	return offset, nil
+ReadFieldBeginError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_OrderServiceGetSalesReportByDateArgs[fieldId]), err)
+SkipFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) FastReadField1(buf []byte) (int, error) {
+	offset := 0
+	_field := NewSalesReportByDateReq()
+	if l, err := _field.FastRead(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+	}
+	p.Req = _field
+	return offset, nil
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) FastWrite(buf []byte) int {
+	return p.FastWriteNocopy(buf, nil)
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) FastWriteNocopy(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p != nil {
+		offset += p.fastWriteField1(buf[offset:], w)
+	}
+	offset += thrift.Binary.WriteFieldStop(buf[offset:])
+	return offset
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) BLength() int {
+	l := 0
+	if p != nil {
+		l += p.field1Length()
+	}
+	l += thrift.Binary.FieldStopLength()
+	return l
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) fastWriteField1(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	offset += thrift.Binary.WriteFieldBegin(buf[offset:], thrift.STRUCT, 1)
+	offset += p.Req.FastWriteNocopy(buf[offset:], w)
+	return offset
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) field1Length() int {
+	l := 0
+	l += thrift.Binary.FieldBeginLength()
+	l += p.Req.BLength()
+	return l
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) FastRead(buf []byte) (int, error) {
+
+	var err error
+	var offset int
+	var l int
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	for {
+		fieldTypeId, fieldId, l, err = thrift.Binary.ReadFieldBegin(buf[offset:])
+		offset += l
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				l, err = p.FastReadField0(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			l, err = thrift.Binary.Skip(buf[offset:], fieldTypeId)
+			offset += l
+			if err != nil {
+				goto SkipFieldError
+			}
+		}
+	}
+
+	return offset, nil
+ReadFieldBeginError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_OrderServiceGetSalesReportByDateResult[fieldId]), err)
+SkipFieldError:
+	return offset, thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) FastReadField0(buf []byte) (int, error) {
+	offset := 0
+	_field := NewSalesReportByDateResp()
+	if l, err := _field.FastRead(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+	}
+	p.Success = _field
+	return offset, nil
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) FastWrite(buf []byte) int {
+	return p.FastWriteNocopy(buf, nil)
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) FastWriteNocopy(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p != nil {
+		offset += p.fastWriteField0(buf[offset:], w)
+	}
+	offset += thrift.Binary.WriteFieldStop(buf[offset:])
+	return offset
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) BLength() int {
+	l := 0
+	if p != nil {
+		l += p.field0Length()
+	}
+	l += thrift.Binary.FieldStopLength()
+	return l
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) fastWriteField0(buf []byte, w thrift.NocopyWriter) int {
+	offset := 0
+	if p.IsSetSuccess() {
+		offset += thrift.Binary.WriteFieldBegin(buf[offset:], thrift.STRUCT, 0)
+		offset += p.Success.FastWriteNocopy(buf[offset:], w)
+	}
+	return offset
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) field0Length() int {
+	l := 0
+	if p.IsSetSuccess() {
+		l += thrift.Binary.FieldBeginLength()
+		l += p.Success.BLength()
+	}
+	return l
+}
+
 func (p *OrderServiceCreateOrderArgs) GetFirstArgument() interface{} {
 	return p.Req
 }
@@ -7627,5 +8010,13 @@ func (p *OrderServiceGetSalesReportArgs) GetFirstArgument() interface{} {
 }
 
 func (p *OrderServiceGetSalesReportResult) GetResult() interface{} {
+	return p.Success
+}
+
+func (p *OrderServiceGetSalesReportByDateArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+func (p *OrderServiceGetSalesReportByDateResult) GetResult() interface{} {
 	return p.Success
 }

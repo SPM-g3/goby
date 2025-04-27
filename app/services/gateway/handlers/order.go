@@ -395,3 +395,18 @@ func HandleGenerateSalesReport(ctx context.Context, c *app.RequestContext) {
 		"average_order_amt": resp.AverageOrderAmt,
 	})
 }
+
+func HandleGenerateSalesReportByDate(ctx context.Context, c *app.RequestContext) {
+
+	var req rpc_order.SalesReportByDateReq
+
+	resp, err := clients.OrderClient.GetSalesReportByDate(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
+	if err != nil {
+		utils.Fail(c, err.Error())
+		return
+	}
+
+	utils.Success(c, utils.H{
+		"EveryDateRevenue": resp.GetDateRevenue(),
+	})
+}
