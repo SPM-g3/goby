@@ -10,7 +10,6 @@ import (
 	rpc_product "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/product"
 	"github.com/bitdance-panic/gobuy/app/services/product/biz/dal/tidb"
 	"github.com/bitdance-panic/gobuy/app/services/product/biz/dao"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func ListProduct(ctx context.Context) (*rpc_product.ListProductResp, error) {
@@ -188,7 +187,6 @@ func CreateProductReview(ctx context.Context, req *rpc_product.CreateProductRevi
 		Rating:    int(req.Rating),
 		Comment:   req.Comment,
 	}
-	hlog.Info("22222222req: %v", req)
 	if err := dao.CreateReview(tidb.DB, &review); err != nil {
 		return nil, err
 	}
