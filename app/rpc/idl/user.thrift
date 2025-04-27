@@ -3,7 +3,8 @@ namespace go user
 struct RegisterReq {
     1: string email
     2: string password
-    4: string username
+    3: string username
+    4: bool is_seller
 }
 
 struct RegisterResp {

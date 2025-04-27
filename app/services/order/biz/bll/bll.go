@@ -3,6 +3,7 @@ package bll
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/bitdance-panic/gobuy/app/consts"
@@ -390,6 +391,41 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 		OrderCount:      int32(orderCount),
 		TopProducts:     topProducts,
 		AverageOrderAmt: averageOrderAmt,
+	}
+
+	return resp, nil
+}
+
+func (bll *OrderBLL) GenerateSalesReportByDate(ctx context.Context, req *rpc_order.SalesReportByDateReq) (*rpc_order.SalesReportByDateResp, error) {
+	var startTime, endTime time.Time
+	var err error
+
+	endTime = time.Now().AddDate(0, 0, 1)
+	startTime = endTime.AddDate(0, 0, -14)
+
+	orders, err := dao.ListOrderByDateRange(tidb.DB, startTime, endTime)
+	if err != nil {
+		return nil, err
+	}
+
+	dailyRevenue := make(map[string]float64)
+	currentTime := startTime
+	for currentTime.Before(time.Now()) {
+		dailyRevenue[currentTime.Format("2006-01-02")] = 0
+		currentTime = currentTime.AddDate(0, 0, 1)
+	}
+
+	for _, order := range *orders {
+		// 获取订单的日期部分
+		orderDate := order.CreatedAt.Format("2006-01-02")
+		fmt.Println(orderDate)
+		// 累加当天的营业额
+		dailyRevenue[orderDate] += order.TotalPrice
+	}
+
+	// 构造结果
+	resp := &rpc_order.SalesReportByDateResp{
+		DateRevenue: dailyRevenue,
 	}
 
 	return resp, nil

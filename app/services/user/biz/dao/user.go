@@ -12,13 +12,14 @@ import (
 
 type User = models.User
 
-func RegisterUser(db *gorm.DB, ctx context.Context, username, password, email string) (*User, error) {
+func RegisterUser(db *gorm.DB, ctx context.Context, username, password, email string, isSeller bool) (*User, error) {
 	hashedPassword := password
 
 	user := &User{
 		Username:       username,
 		PasswordHashed: hashedPassword,
 		Email:          email,
+		IsSeller:       isSeller,
 	}
 
 	// 插入新用户

@@ -65,6 +65,7 @@ func CreateProduct(ctx context.Context, req *rpc_product.CreateProductReq) (*rpc
 		Price:       req.Price,
 		Stock:       int(req.Stock),
 		Image:       req.Image,
+		SellerID:    int(req.SellerId),
 	}
 	if err := dao.Create(tidb.DB, &p); err != nil {
 		return nil, err
@@ -191,6 +192,7 @@ func convertToProtoProduct(p *models.Product) *rpc_product.Product {
 		Price:       p.Price,
 		Stock:       int32(p.Stock),
 		Image:       p.Image,
+		SellerId:    int64(p.SellerID),
 		CreatedAt:   p.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
 }

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"github.com/bitdance-panic/gobuy/app/consts"
 	"strconv"
 	"time"
 
@@ -52,6 +53,15 @@ func HandleCreateProduct(ctx context.Context, c *app.RequestContext) {
 		utils.Fail(c, err.Error())
 		return
 	}
+	userID := c.GetInt(consts.CONTEXT_UID_KEY)
+	req.SellerId = int64(userID)
+	req.Name = c.Query("name")
+	req.Description = c.Query("description")
+	req.Price, _ = strconv.ParseFloat(c.Query("price"), 64)
+	req.Image = c.Query("image")
+	stock, _ := strconv.ParseInt(c.Query("stock"), 10, 32)
+	req.Stock = int32(stock)
+
 	resp, err := clients.ProductClient.CreateProduct(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
 	if err != nil {
 		utils.Fail(c, err.Error())

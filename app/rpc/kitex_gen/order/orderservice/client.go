@@ -24,6 +24,7 @@ type Client interface {
 	UpdateOrderTracking(ctx context.Context, req *order.UpdateOrderTrackingReq, callOptions ...callopt.Option) (r *order.UpdateOrderTrackingResp, err error)
 	UpdateOrderDiscount(ctx context.Context, req *order.UpdateOrderDiscountReq, callOptions ...callopt.Option) (r *order.UpdateOrderDiscountResp, err error)
 	GetSalesReport(ctx context.Context, req *order.SalesReportReq, callOptions ...callopt.Option) (r *order.SalesReportResp, err error)
+	GetSalesReportByDate(ctx context.Context, req *order.SalesReportByDateReq, callOptions ...callopt.Option) (r *order.SalesReportByDateResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -118,4 +119,9 @@ func (p *kOrderServiceClient) UpdateOrderDiscount(ctx context.Context, req *orde
 func (p *kOrderServiceClient) GetSalesReport(ctx context.Context, req *order.SalesReportReq, callOptions ...callopt.Option) (r *order.SalesReportResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetSalesReport(ctx, req)
+}
+
+func (p *kOrderServiceClient) GetSalesReportByDate(ctx context.Context, req *order.SalesReportByDateReq, callOptions ...callopt.Option) (r *order.SalesReportByDateResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetSalesReportByDate(ctx, req)
 }

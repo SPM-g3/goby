@@ -18,6 +18,7 @@ type Product struct {
 	Description string  `thrift:"description,6" frugal:"6,default,string" json:"description"`
 	CreatedAt   string  `thrift:"created_at,7" frugal:"7,default,string" json:"created_at"`
 	IsDeleted   bool    `thrift:"is_deleted,8" frugal:"8,default,bool" json:"is_deleted"`
+	SellerId    int64   `thrift:"seller_id,9" frugal:"9,default,i64" json:"seller_id"`
 }
 
 func NewProduct() *Product {
@@ -58,6 +59,10 @@ func (p *Product) GetCreatedAt() (v string) {
 func (p *Product) GetIsDeleted() (v bool) {
 	return p.IsDeleted
 }
+
+func (p *Product) GetSellerId() (v int64) {
+	return p.SellerId
+}
 func (p *Product) SetId(val int32) {
 	p.Id = val
 }
@@ -82,6 +87,9 @@ func (p *Product) SetCreatedAt(val string) {
 func (p *Product) SetIsDeleted(val bool) {
 	p.IsDeleted = val
 }
+func (p *Product) SetSellerId(val int64) {
+	p.SellerId = val
+}
 
 var fieldIDToName_Product = map[int16]string{
 	1: "id",
@@ -92,6 +100,7 @@ var fieldIDToName_Product = map[int16]string{
 	6: "description",
 	7: "created_at",
 	8: "is_deleted",
+	9: "seller_id",
 }
 
 func (p *Product) Read(iprot thrift.TProtocol) (err error) {
@@ -2736,6 +2745,7 @@ type CreateProductReq struct {
 	Price       float64 `thrift:"price,3" frugal:"3,default,double" json:"price"`
 	Stock       int32   `thrift:"stock,4" frugal:"4,default,i32" json:"stock"`
 	Image       string  `thrift:"image,5" frugal:"5,default,string" json:"image"`
+	SellerId    int64   `thrift:"seller_id,6" frugal:"6,default,i64" json:"seller_id"`
 }
 
 func NewCreateProductReq() *CreateProductReq {
@@ -2764,6 +2774,10 @@ func (p *CreateProductReq) GetStock() (v int32) {
 func (p *CreateProductReq) GetImage() (v string) {
 	return p.Image
 }
+
+func (p *CreateProductReq) GetSellerId() (v int64) {
+	return p.SellerId
+}
 func (p *CreateProductReq) SetName(val string) {
 	p.Name = val
 }
@@ -2779,6 +2793,9 @@ func (p *CreateProductReq) SetStock(val int32) {
 func (p *CreateProductReq) SetImage(val string) {
 	p.Image = val
 }
+func (p *CreateProductReq) SetSellerId(val int64) {
+	p.SellerId = val
+}
 
 var fieldIDToName_CreateProductReq = map[int16]string{
 	1: "name",
@@ -2786,6 +2803,7 @@ var fieldIDToName_CreateProductReq = map[int16]string{
 	3: "price",
 	4: "stock",
 	5: "image",
+	6: "seller_id",
 }
 
 func (p *CreateProductReq) Read(iprot thrift.TProtocol) (err error) {

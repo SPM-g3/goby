@@ -104,6 +104,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
+	"GetSalesReportByDate": kitex.NewMethodInfo(
+		getSalesReportByDateHandler,
+		newOrderServiceGetSalesReportByDateArgs,
+		newOrderServiceGetSalesReportByDateResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
 }
 
 var (
@@ -404,6 +411,24 @@ func newOrderServiceGetSalesReportResult() interface{} {
 	return order.NewOrderServiceGetSalesReportResult()
 }
 
+func getSalesReportByDateHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*order.OrderServiceGetSalesReportByDateArgs)
+	realResult := result.(*order.OrderServiceGetSalesReportByDateResult)
+	success, err := handler.(order.OrderService).GetSalesReportByDate(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newOrderServiceGetSalesReportByDateArgs() interface{} {
+	return order.NewOrderServiceGetSalesReportByDateArgs()
+}
+
+func newOrderServiceGetSalesReportByDateResult() interface{} {
+	return order.NewOrderServiceGetSalesReportByDateResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -539,6 +564,16 @@ func (p *kClient) GetSalesReport(ctx context.Context, req *order.SalesReportReq)
 	_args.Req = req
 	var _result order.OrderServiceGetSalesReportResult
 	if err = p.c.Call(ctx, "GetSalesReport", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetSalesReportByDate(ctx context.Context, req *order.SalesReportByDateReq) (r *order.SalesReportByDateResp, err error) {
+	var _args order.OrderServiceGetSalesReportByDateArgs
+	_args.Req = req
+	var _result order.OrderServiceGetSalesReportByDateResult
+	if err = p.c.Call(ctx, "GetSalesReportByDate", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -66,3 +66,7 @@ func (*OrderServiceImpl) UpdateOrderTracking(ctx context.Context, req *rpc_order
 func (*OrderServiceImpl) UpdateOrderDiscount(ctx context.Context, req *rpc_order.UpdateOrderDiscountReq) (*rpc_order.UpdateOrderDiscountResp, error) {
 	return orderBll.UpdateOrderDiscount(ctx, req)
 }
+
+func (*OrderServiceImpl) GetSalesReportByDate(ctx context.Context, req *rpc_order.SalesReportByDateReq) (*rpc_order.SalesReportByDateResp, error) {
+	return orderBll.GenerateSalesReportByDate(ctx, req)
+}

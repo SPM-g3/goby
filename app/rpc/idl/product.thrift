@@ -10,6 +10,7 @@ struct Product {
     6: string description;
     7: string created_at;
     8: bool is_deleted;
+    9: i64 seller_id
 }
 
 struct ProductReview {
@@ -78,6 +79,7 @@ struct CreateProductReq {
     3: double price;
     4: i32 stock;
     5: string image;
+    6: i64 seller_id
 }
 
 struct CreateProductResp {

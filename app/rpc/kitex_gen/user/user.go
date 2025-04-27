@@ -12,7 +12,8 @@ import (
 type RegisterReq struct {
 	Email    string `thrift:"email,1" frugal:"1,default,string" json:"email"`
 	Password string `thrift:"password,2" frugal:"2,default,string" json:"password"`
-	Username string `thrift:"username,4" frugal:"4,default,string" json:"username"`
+	Username string `thrift:"username,3" frugal:"3,default,string" json:"username"`
+	IsSeller bool   `thrift:"is_seller,4" frugal:"4,default,bool" json:"is_seller"`
 }
 
 func NewRegisterReq() *RegisterReq {
@@ -33,6 +34,10 @@ func (p *RegisterReq) GetPassword() (v string) {
 func (p *RegisterReq) GetUsername() (v string) {
 	return p.Username
 }
+
+func (p *RegisterReq) GetIsSeller() (v bool) {
+	return p.IsSeller
+}
 func (p *RegisterReq) SetEmail(val string) {
 	p.Email = val
 }
@@ -42,11 +47,15 @@ func (p *RegisterReq) SetPassword(val string) {
 func (p *RegisterReq) SetUsername(val string) {
 	p.Username = val
 }
+func (p *RegisterReq) SetIsSeller(val bool) {
+	p.IsSeller = val
+}
 
 var fieldIDToName_RegisterReq = map[int16]string{
 	1: "email",
 	2: "password",
-	4: "username",
+	3: "username",
+	4: "is_seller",
 }
 
 func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
@@ -84,8 +93,16 @@ func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 4:
+		case 3:
 			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.BOOL {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -143,7 +160,7 @@ func (p *RegisterReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Password = _field
 	return nil
 }
-func (p *RegisterReq) ReadField4(iprot thrift.TProtocol) error {
+func (p *RegisterReq) ReadField3(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -152,6 +169,17 @@ func (p *RegisterReq) ReadField4(iprot thrift.TProtocol) error {
 		_field = v
 	}
 	p.Username = _field
+	return nil
+}
+func (p *RegisterReq) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSeller = _field
 	return nil
 }
 
@@ -168,6 +196,10 @@ func (p *RegisterReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 		if err = p.writeField4(oprot); err != nil {
@@ -226,11 +258,28 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *RegisterReq) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("username", thrift.STRING, 4); err != nil {
+func (p *RegisterReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("username", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Username); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *RegisterReq) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("is_seller", thrift.BOOL, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSeller); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -263,7 +312,10 @@ func (p *RegisterReq) DeepEqual(ano *RegisterReq) bool {
 	if !p.Field2DeepEqual(ano.Password) {
 		return false
 	}
-	if !p.Field4DeepEqual(ano.Username) {
+	if !p.Field3DeepEqual(ano.Username) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.IsSeller) {
 		return false
 	}
 	return true
@@ -283,9 +335,16 @@ func (p *RegisterReq) Field2DeepEqual(src string) bool {
 	}
 	return true
 }
-func (p *RegisterReq) Field4DeepEqual(src string) bool {
+func (p *RegisterReq) Field3DeepEqual(src string) bool {
 
 	if strings.Compare(p.Username, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *RegisterReq) Field4DeepEqual(src bool) bool {
+
+	if p.IsSeller != src {
 		return false
 	}
 	return true
