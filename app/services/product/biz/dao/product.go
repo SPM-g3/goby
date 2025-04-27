@@ -2,9 +2,11 @@ package dao
 
 import (
 	"errors"
+
 	"gorm.io/gorm"
 
 	"github.com/bitdance-panic/gobuy/app/models"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 type Product = models.Product
@@ -110,6 +112,7 @@ func Search(db *gorm.DB, query string, category string, pageNum int, pageSize in
 		countQuery = countQuery.Where("category = ?", category)
 	}
 
+	hlog.Info("1111111111minPrice: %d, maxPrice: %d", minPrice, maxPrice)
 	countQuery = countQuery.Where("price BETWEEN ? AND ?", minPrice, maxPrice)
 
 	if brand != "" {

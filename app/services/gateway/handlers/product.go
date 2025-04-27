@@ -160,9 +160,9 @@ func HandleSearchProducts(ctx context.Context, c *app.RequestContext) {
 		Category: category,
 		PageNum:  int32(pageNum),
 		PageSize: int32(pageSize),
-		MinPrice: &minPrice,
-		MaxPrice: &maxPrice,
-		Brand:    &brand,
+		MinPrice: int32(minPrice),
+		MaxPrice: int32(maxPrice),
+		Brand:    brand,
 	}
 
 	// 调用 RPC 客户端进行搜索
