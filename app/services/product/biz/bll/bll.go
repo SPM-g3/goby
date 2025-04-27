@@ -117,29 +117,18 @@ func RemoveProduct(ctx context.Context, req *rpc_product.RemoveProductReq) (*rpc
 func SearchProducts(ctx context.Context, req *rpc_product.SearchProductsReq) (*rpc_product.SearchProductsResp, error) {
 	// 处理 minPrice 的默认值
 	minPrice := 0
-	if !req.IsSetMinPrice() {
-		minPrice = 0
-	} else {
-		minPrice = int(req.GetMinPrice())
+	if req.MinPrice != 0 {
+		minPrice = int(req.MinPrice)
 	}
 
+	hlog.Info("MaxPrice: ", req.MaxPrice)
 	// 处理 maxPrice 的默认值
-	maxPrice := 0
-	if !req.IsSetMaxPrice() {
-		maxPrice = math.MaxInt32
-	} else {
-		maxPrice = int(req.GetMaxPrice())
+	maxPrice := math.MaxInt32
+	if req.MaxPrice != 0 {
+		maxPrice = int(req.MaxPrice)
 	}
 
-	// 处理 brand 参数
-	brand := ""
-	if !req.IsSetBrand() {
-		brand = ""
-	} else {
-		brand = req.GetBrand()
-	}
-
-	products, total, err := dao.Search(tidb.DB, req.Query, req.Category, int(req.PageNum), int(req.PageSize), minPrice, maxPrice, brand)
+	products, total, err := dao.Search(tidb.DB, req.Query, req.Category, int(req.PageNum), int(req.PageSize), minPrice, maxPrice, req.Brand)
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +178,6 @@ func CreateProductReview(ctx context.Context, req *rpc_product.CreateProductRevi
 		Rating:    int(req.Rating),
 		Comment:   req.Comment,
 	}
-	hlog.Info("22222222req: %v", req)
 	if err := dao.CreateReview(tidb.DB, &review); err != nil {
 		return nil, err
 	}

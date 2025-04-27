@@ -68,9 +68,13 @@ func Create(db *gorm.DB, userID int, productID int) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	// 已存在
+	// 已存在，增加数量
 	if item != nil {
-		return false, nil
+		err = UpdateQuantity(db, item, item.Quantity+1)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
 	}
 	// 如果没有找到记录，则创建一个新的购物车项
 	item = &CartItem{UserID: userID, ProductID: productID, Quantity: consts.ITEM_INITIAL_QUANTITY}
