@@ -99,6 +99,7 @@ func authenticate(ctx context.Context, c *app.RequestContext) (interface{}, erro
 	}
 	userID := int(loginResp.UserId)
 	c.Set(app_consts.CONTEXT_UID_KEY, userID)
+	c.Set("is_seller", loginReq.IsSeller)
 	return loginResp.UserId, nil
 }
 
@@ -120,11 +121,12 @@ func loginResponse(ctx context.Context, c *app.RequestContext, code int, token s
 	}
 
 	req := rpc_user.GetUserReq{
-		UserId: int32(userID),
+		UserId:   int32(userID),
+		IsSeller: c.GetBool("is_seller"),
 	}
 
 	loginResp, err := clients.UserClient.GetUser(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
-	if err != nil {
+	if err != nil || !loginResp.Success {
 		utils.Fail(c, err.Error())
 		return
 	}
@@ -134,6 +136,7 @@ func loginResponse(ctx context.Context, c *app.RequestContext, code int, token s
 		"refresh_token": refreshToken,
 		"email":         loginResp.Email,
 		"username":      loginResp.Username,
+		"userId":        userID,
 	})
 }
 

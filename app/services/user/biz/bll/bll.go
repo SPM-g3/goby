@@ -76,7 +76,8 @@ func AdminListUser(ctx context.Context, req *rpc_user.AdminListUserReq) (*rpc_us
 	}, nil
 }
 
-func GetUser(ctx context.Context, userID int) (*rpc_user.GetUserResp, error) {
+func GetUser(ctx context.Context, req *rpc_user.GetUserReq) (*rpc_user.GetUserResp, error) {
+	userID := int(req.UserId)
 	if userID <= 0 {
 		return &rpc_user.GetUserResp{Success: false}, nil
 	}
@@ -84,6 +85,11 @@ func GetUser(ctx context.Context, userID int) (*rpc_user.GetUserResp, error) {
 	if err != nil {
 		return &rpc_user.GetUserResp{Success: false}, nil
 	}
+
+	if user.IsSeller != req.IsSeller {
+		return &rpc_user.GetUserResp{Success: false}, nil
+	}
+
 	addr, err := dao.GetUserAddressesByUserID(tidb.DB, ctx, userID)
 	if err != nil {
 		return &rpc_user.GetUserResp{Success: false}, nil
@@ -104,6 +110,7 @@ func GetUser(ctx context.Context, userID int) (*rpc_user.GetUserResp, error) {
 		Email:     user.Email,
 		Password:  user.PasswordHashed,
 		Addresses: addresses,
+		IsSeller:  user.IsSeller,
 	}, nil
 }
 

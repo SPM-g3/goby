@@ -20,7 +20,7 @@ func (*UserServiceImpl) Login(ctx context.Context, req *rpc_user.LoginReq) (*rpc
 
 // 获取用户信息
 func (*UserServiceImpl) GetUser(ctx context.Context, req *rpc_user.GetUserReq) (*rpc_user.GetUserResp, error) {
-	return bll.GetUser(ctx, int(req.UserId))
+	return bll.GetUser(ctx, req)
 }
 
 func (*UserServiceImpl) AdminListUser(ctx context.Context, req *rpc_user.AdminListUserReq) (*rpc_user.AdminListUserResp, error) {

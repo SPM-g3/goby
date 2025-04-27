@@ -845,6 +845,7 @@ func (p *SellerResp) Field1DeepEqual(src bool) bool {
 type LoginReq struct {
 	Email    string `thrift:"email,1" frugal:"1,default,string" json:"email"`
 	Password string `thrift:"password,2" frugal:"2,default,string" json:"password"`
+	IsSeller bool   `thrift:"is_seller,3" frugal:"3,default,bool" json:"is_seller"`
 }
 
 func NewLoginReq() *LoginReq {
@@ -861,16 +862,24 @@ func (p *LoginReq) GetEmail() (v string) {
 func (p *LoginReq) GetPassword() (v string) {
 	return p.Password
 }
+
+func (p *LoginReq) GetIsSeller() (v bool) {
+	return p.IsSeller
+}
 func (p *LoginReq) SetEmail(val string) {
 	p.Email = val
 }
 func (p *LoginReq) SetPassword(val string) {
 	p.Password = val
 }
+func (p *LoginReq) SetIsSeller(val bool) {
+	p.IsSeller = val
+}
 
 var fieldIDToName_LoginReq = map[int16]string{
 	1: "email",
 	2: "password",
+	3: "is_seller",
 }
 
 func (p *LoginReq) Read(iprot thrift.TProtocol) (err error) {
@@ -903,6 +912,14 @@ func (p *LoginReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -959,6 +976,17 @@ func (p *LoginReq) ReadField2(iprot thrift.TProtocol) error {
 	p.Password = _field
 	return nil
 }
+func (p *LoginReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSeller = _field
+	return nil
+}
 
 func (p *LoginReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -973,6 +1001,10 @@ func (p *LoginReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1027,6 +1059,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *LoginReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("is_seller", thrift.BOOL, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSeller); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *LoginReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1047,6 +1096,9 @@ func (p *LoginReq) DeepEqual(ano *LoginReq) bool {
 	if !p.Field2DeepEqual(ano.Password) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.IsSeller) {
+		return false
+	}
 	return true
 }
 
@@ -1060,6 +1112,13 @@ func (p *LoginReq) Field1DeepEqual(src string) bool {
 func (p *LoginReq) Field2DeepEqual(src string) bool {
 
 	if strings.Compare(p.Password, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *LoginReq) Field3DeepEqual(src bool) bool {
+
+	if p.IsSeller != src {
 		return false
 	}
 	return true
@@ -1289,7 +1348,8 @@ func (p *LoginResp) Field2DeepEqual(src int32) bool {
 }
 
 type GetUserReq struct {
-	UserId int32 `thrift:"user_id,1" frugal:"1,default,i32" json:"user_id"`
+	UserId   int32 `thrift:"user_id,1" frugal:"1,default,i32" json:"user_id"`
+	IsSeller bool  `thrift:"is_seller,2" frugal:"2,default,bool" json:"is_seller"`
 }
 
 func NewGetUserReq() *GetUserReq {
@@ -1302,12 +1362,20 @@ func (p *GetUserReq) InitDefault() {
 func (p *GetUserReq) GetUserId() (v int32) {
 	return p.UserId
 }
+
+func (p *GetUserReq) GetIsSeller() (v bool) {
+	return p.IsSeller
+}
 func (p *GetUserReq) SetUserId(val int32) {
 	p.UserId = val
+}
+func (p *GetUserReq) SetIsSeller(val bool) {
+	p.IsSeller = val
 }
 
 var fieldIDToName_GetUserReq = map[int16]string{
 	1: "user_id",
+	2: "is_seller",
 }
 
 func (p *GetUserReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1332,6 +1400,14 @@ func (p *GetUserReq) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1377,6 +1453,17 @@ func (p *GetUserReq) ReadField1(iprot thrift.TProtocol) error {
 	p.UserId = _field
 	return nil
 }
+func (p *GetUserReq) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSeller = _field
+	return nil
+}
 
 func (p *GetUserReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -1387,6 +1474,10 @@ func (p *GetUserReq) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
 			goto WriteFieldError
 		}
 	}
@@ -1424,6 +1515,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *GetUserReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("is_seller", thrift.BOOL, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSeller); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
 func (p *GetUserReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1441,12 +1549,22 @@ func (p *GetUserReq) DeepEqual(ano *GetUserReq) bool {
 	if !p.Field1DeepEqual(ano.UserId) {
 		return false
 	}
+	if !p.Field2DeepEqual(ano.IsSeller) {
+		return false
+	}
 	return true
 }
 
 func (p *GetUserReq) Field1DeepEqual(src int32) bool {
 
 	if p.UserId != src {
+		return false
+	}
+	return true
+}
+func (p *GetUserReq) Field2DeepEqual(src bool) bool {
+
+	if p.IsSeller != src {
 		return false
 	}
 	return true
@@ -1458,6 +1576,7 @@ type GetUserResp struct {
 	Email     string         `thrift:"email,3" frugal:"3,default,string" json:"email"`
 	Password  string         `thrift:"password,4" frugal:"4,default,string" json:"password"`
 	Addresses []*UserAddress `thrift:"addresses,5" frugal:"5,default,list<UserAddress>" json:"addresses"`
+	IsSeller  bool           `thrift:"is_seller,6" frugal:"6,default,bool" json:"is_seller"`
 }
 
 func NewGetUserResp() *GetUserResp {
@@ -1486,6 +1605,10 @@ func (p *GetUserResp) GetPassword() (v string) {
 func (p *GetUserResp) GetAddresses() (v []*UserAddress) {
 	return p.Addresses
 }
+
+func (p *GetUserResp) GetIsSeller() (v bool) {
+	return p.IsSeller
+}
 func (p *GetUserResp) SetSuccess(val bool) {
 	p.Success = val
 }
@@ -1501,6 +1624,9 @@ func (p *GetUserResp) SetPassword(val string) {
 func (p *GetUserResp) SetAddresses(val []*UserAddress) {
 	p.Addresses = val
 }
+func (p *GetUserResp) SetIsSeller(val bool) {
+	p.IsSeller = val
+}
 
 var fieldIDToName_GetUserResp = map[int16]string{
 	1: "success",
@@ -1508,6 +1634,7 @@ var fieldIDToName_GetUserResp = map[int16]string{
 	3: "email",
 	4: "password",
 	5: "addresses",
+	6: "is_seller",
 }
 
 func (p *GetUserResp) Read(iprot thrift.TProtocol) (err error) {
@@ -1564,6 +1691,14 @@ func (p *GetUserResp) Read(iprot thrift.TProtocol) (err error) {
 		case 5:
 			if fieldTypeId == thrift.LIST {
 				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1665,6 +1800,17 @@ func (p *GetUserResp) ReadField5(iprot thrift.TProtocol) error {
 	p.Addresses = _field
 	return nil
 }
+func (p *GetUserResp) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSeller = _field
+	return nil
+}
 
 func (p *GetUserResp) Write(oprot thrift.TProtocol) (err error) {
 
@@ -1691,6 +1837,10 @@ func (p *GetUserResp) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -1804,6 +1954,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
+func (p *GetUserResp) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("is_seller", thrift.BOOL, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSeller); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
 func (p *GetUserResp) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1831,6 +1998,9 @@ func (p *GetUserResp) DeepEqual(ano *GetUserResp) bool {
 		return false
 	}
 	if !p.Field5DeepEqual(ano.Addresses) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.IsSeller) {
 		return false
 	}
 	return true
@@ -1874,6 +2044,13 @@ func (p *GetUserResp) Field5DeepEqual(src []*UserAddress) bool {
 		if !v.DeepEqual(_src) {
 			return false
 		}
+	}
+	return true
+}
+func (p *GetUserResp) Field6DeepEqual(src bool) bool {
+
+	if p.IsSeller != src {
+		return false
 	}
 	return true
 }

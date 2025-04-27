@@ -10,7 +10,6 @@ import (
 	rpc_product "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/product"
 	"github.com/bitdance-panic/gobuy/app/services/product/biz/dal/tidb"
 	"github.com/bitdance-panic/gobuy/app/services/product/biz/dao"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func ListProduct(ctx context.Context) (*rpc_product.ListProductResp, error) {
@@ -120,7 +119,6 @@ func SearchProducts(ctx context.Context, req *rpc_product.SearchProductsReq) (*r
 		minPrice = int(req.MinPrice)
 	}
 
-	hlog.Info("MaxPrice: ", req.MaxPrice)
 	// 处理 maxPrice 的默认值
 	maxPrice := math.MaxInt32
 	if req.MaxPrice != 0 {

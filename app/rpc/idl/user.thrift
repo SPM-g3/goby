@@ -22,6 +22,7 @@ struct SellerResp {
 struct LoginReq {
     1: string email
     2: string password
+    3: bool is_seller
 }
 
 struct LoginResp {
@@ -31,6 +32,7 @@ struct LoginResp {
 
 struct GetUserReq {
     1: i32 user_id
+    2: bool is_seller
 }
 
 
@@ -40,6 +42,7 @@ struct GetUserResp {
     3: string email
     4: string password
     5: list<UserAddress> addresses
+    6: bool is_seller
 }
 
 struct User {
