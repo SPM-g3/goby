@@ -156,7 +156,8 @@ struct GetOrderResp{
 
 struct SalesReportReq {
     1: optional string start_date, // 可选参数，用于过滤开始日期
-    2: optional string end_date    // 可选参数，用于过滤结束日期
+    2: optional string end_date,    // 可选参数，用于过滤结束日期
+    3: i32 SellerID,
 }
 
 struct SalesReportResp {
@@ -164,6 +165,8 @@ struct SalesReportResp {
     2: required i32 order_count,
     3: optional map<string, i32> top_products // 最畅销的产品及其销量
     4: required double average_orderAmt // 平均订单金额
+    5: i32 TotalProductCount,
+    6: map<string, double> DailyRevenue,
 }
 
 struct SalesReportByDateReq {

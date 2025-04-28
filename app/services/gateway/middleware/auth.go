@@ -127,7 +127,7 @@ func loginResponse(ctx context.Context, c *app.RequestContext, code int, token s
 
 	loginResp, err := clients.UserClient.GetUser(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
 	if err != nil || !loginResp.Success {
-		utils.Fail(c, err.Error())
+		utils.FailFull(c, 401, "Incorrent", nil)
 		return
 	}
 
