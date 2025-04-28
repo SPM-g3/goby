@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/bitdance-panic/gobuy/app/consts"
+	gconsts "github.com/bitdance-panic/gobuy/app/consts"
 	rpc_order "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/order"
 	clients "github.com/bitdance-panic/gobuy/app/services/gateway/biz/clients"
 	"github.com/bitdance-panic/gobuy/app/utils"
@@ -369,11 +370,11 @@ func HandleGetUserAddress(ctx context.Context, c *app.RequestContext) {
 }
 
 func HandleGenerateSalesReport(ctx context.Context, c *app.RequestContext) {
-
 	var req rpc_order.SalesReportReq
 
 	startDate := c.Query("start_date")
 	endDate := c.Query("end_date")
+	userID := c.GetInt(gconsts.CONTEXT_UID_KEY)
 
 	if startDate != "" {
 		req.StartDate = &startDate
@@ -382,6 +383,8 @@ func HandleGenerateSalesReport(ctx context.Context, c *app.RequestContext) {
 		req.EndDate = &endDate
 	}
 
+	req.SellerID = int32(userID)
+
 	resp, err := clients.OrderClient.GetSalesReport(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
 	if err != nil {
 		utils.Fail(c, err.Error())
@@ -389,15 +392,16 @@ func HandleGenerateSalesReport(ctx context.Context, c *app.RequestContext) {
 	}
 
 	utils.Success(c, utils.H{
-		"total_revenue":     resp.TotalRevenue,
-		"order_count":       resp.OrderCount,
-		"top_products":      resp.TopProducts,
-		"average_order_amt": resp.AverageOrderAmt,
+		"total_revenue":       resp.TotalRevenue,
+		"order_count":         resp.OrderCount,
+		"top_products":        resp.TopProducts,
+		"average_order_amt":   resp.AverageOrderAmt,
+		"total_product_count": resp.TotalProductCount,
+		"daily_revenue":       resp.DailyRevenue,
 	})
 }
 
 func HandleGenerateSalesReportByDate(ctx context.Context, c *app.RequestContext) {
-
 	var req rpc_order.SalesReportByDateReq
 
 	resp, err := clients.OrderClient.GetSalesReportByDate(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))

@@ -263,3 +263,9 @@ func (s *ProductServiceImpl) CheckStock(ctx context.Context, req *product.CheckS
 	// TODO: Your code here...
 	return
 }
+
+// GetSalesReportByDate implements the OrderServiceImpl interface.
+func (s *OrderServiceImpl) GetSalesReportByDate(ctx context.Context, req *order.SalesReportByDateReq) (resp *order.SalesReportByDateResp, err error) {
+	// TODO: Your code here...
+	return
+}

@@ -2,11 +2,12 @@ package dao
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/bitdance-panic/gobuy/app/consts"
 	"github.com/bitdance-panic/gobuy/app/models"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
-	"time"
 )
 
 type (
@@ -143,7 +144,6 @@ func ListOrderByDateRange(db *gorm.DB, startTime, endTime time.Time) (*[]Order, 
 	err := db.Where("created_at >= ? AND created_at <= ?", startTime, endTime).
 		Preload("Items").
 		Find(&orders).Error
-
 	if err != nil {
 		return nil, err
 	}

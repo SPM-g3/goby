@@ -95,6 +95,7 @@ type Order struct {
 	Name           string
 	Phone          string
 	Address        string
+	SellerID       int
 }
 
 type OrderItem struct {

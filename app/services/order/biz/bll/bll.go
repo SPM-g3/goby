@@ -356,20 +356,34 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 	if err != nil {
 		return nil, err
 	}
+	filteredOrders := make([]models.Order, 0)
+	for _, order := range *orders {
+		if (order.Status == 1 || order.Status == 2 || order.Status == 3) && order.SellerID == int(req.SellerID) {
+			filteredOrders = append(filteredOrders, order)
+		}
+	}
+	orders = &filteredOrders
 
 	// 分析订单数据
 	totalRevenue := 0.0
+	totalProductCount := 0
 	orderCount := len(*orders)
+	productCount := make(map[string]int)
 	productSales := make(map[string]int) // 产品销量统计
+	dailyRevenue := make(map[string]float64)
 
 	for _, order := range *orders {
 		// 累加总销售额
 		totalRevenue += order.TotalPrice
+		orderDate := order.CreatedAt.Format("2006-01-02")
+		dailyRevenue[orderDate] += order.TotalPrice
 
 		// 统计每个产品的销量
 		for _, item := range order.Items {
 			productName := item.ProductName
 			productSales[productName] += item.Quantity
+			productCount[productName] += 1
+			totalProductCount += item.Quantity
 		}
 	}
 
@@ -379,7 +393,8 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 		averageOrderAmt = totalRevenue / float64(orderCount)
 	}
 
-	// 找出最畅销的产品及其销量
+	// 找出最畅销的三件产品及其销量
+
 	topProducts := make(map[string]int32)
 	for productName, quantity := range productSales {
 		topProducts[productName] = int32(quantity)
@@ -387,10 +402,12 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 
 	// 构造结果
 	resp := &rpc_order.SalesReportResp{
-		TotalRevenue:    totalRevenue,
-		OrderCount:      int32(orderCount),
-		TopProducts:     topProducts,
-		AverageOrderAmt: averageOrderAmt,
+		TotalRevenue:      totalRevenue,
+		OrderCount:        int32(orderCount),
+		TopProducts:       topProducts,
+		AverageOrderAmt:   averageOrderAmt,
+		TotalProductCount: int32(totalProductCount),
+		DailyRevenue:      dailyRevenue,
 	}
 
 	return resp, nil
