@@ -34,6 +34,7 @@ struct LoginResp {
 struct GetUserReq {
     1: i32 user_id
     2: bool is_seller
+    3: bool CheckSeller = 0
 }
 
 

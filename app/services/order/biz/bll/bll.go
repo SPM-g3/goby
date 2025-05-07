@@ -16,8 +16,6 @@ import (
 
 	rpc_cart "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/cart"
 	rpc_order "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/order"
-
-	"github.com/shopspring/decimal"
 )
 
 type OrderBLL struct{}
@@ -34,13 +32,19 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		return nil, err
 	}
 	orderItems := make([]models.OrderItem, len(req.CartItemIDs))
-	totalPrice := 0.0
 	for i, cartItemID := range req.CartItemIDs {
 		resp, err := clients.CartClient.GetItem(
 			ctx,
 			&rpc_cart.GetItemReq{ItemId: cartItemID},
 		)
 		if err != nil {
+			return nil, err
+		}
+		_, err2 := clients.CartClient.DeleteItem(
+			ctx,
+			&rpc_cart.DeleteItemReq{ItemId: cartItemID},
+		)
+		if err2 != nil {
 			return nil, err
 		}
 		cartItem := resp.Item
@@ -59,17 +63,16 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		// 	return nil, err
 		// }
 		orderItems[i] = orderItem
-		p, _ := decimal.NewFromFloat(orderItem.Price).Mul(decimal.NewFromInt(int64(orderItem.Quantity))).Float64()
+		// p, _ := decimal.NewFromFloat(orderItem.Price).Mul(decimal.NewFromInt(int64(orderItem.Quantity))).Float64()
 		// if !exact {
 		// 	return nil, errors.New("handle decimal is not exact")
 		// }
-		totalPrice += p
 	}
 	// 先保存下订单
 	order := models.Order{
 		UserID:     int(req.UserId),
 		Number:     orderNumber,
-		TotalPrice: totalPrice,
+		TotalPrice: req.TotalPrice,
 		Status:     int(consts.OrderStatusPending),
 		PayTime:    nil,
 		Phone:      req.Phone,

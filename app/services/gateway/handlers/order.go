@@ -17,9 +17,10 @@ import (
 func HandleCreateOrder(ctx context.Context, c *app.RequestContext) {
 	userID := c.GetInt(consts.CONTEXT_UID_KEY)
 	var body struct {
-		ItemIDs      []int  `json:"itemIDs"`
-		Phone        string `json:"phone"`
-		OrderAddress string `json:"order_address"`
+		ItemIDs      []int   `json:"itemIDs"`
+		Phone        string  `json:"phone"`
+		OrderAddress string  `json:"order_address"`
+		TotalPrice   float64 `json:"total_price"`
 	}
 	if err := c.Bind(&body); err != nil {
 		utils.Fail(c, err.Error())
@@ -34,6 +35,7 @@ func HandleCreateOrder(ctx context.Context, c *app.RequestContext) {
 		CartItemIDs:  itemIDs,
 		Phone:        body.Phone,
 		OrderAddress: body.OrderAddress,
+		TotalPrice:   body.TotalPrice,
 	}
 	resp, err := clients.OrderClient.CreateOrder(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
 	if err != nil {

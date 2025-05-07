@@ -78,6 +78,7 @@ func AdminListUser(ctx context.Context, req *rpc_user.AdminListUserReq) (*rpc_us
 
 func GetUser(ctx context.Context, req *rpc_user.GetUserReq) (*rpc_user.GetUserResp, error) {
 	userID := int(req.UserId)
+	hlog.Info("11111111111req: %v", req)
 	if userID <= 0 {
 		return &rpc_user.GetUserResp{Success: false}, nil
 	}
@@ -86,7 +87,7 @@ func GetUser(ctx context.Context, req *rpc_user.GetUserReq) (*rpc_user.GetUserRe
 		return &rpc_user.GetUserResp{Success: false}, nil
 	}
 
-	if user.IsSeller != req.IsSeller {
+	if req.CheckSeller && req.IsSeller != user.IsSeller {
 		return &rpc_user.GetUserResp{Success: false}, nil
 	}
 

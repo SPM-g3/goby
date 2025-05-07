@@ -121,8 +121,9 @@ func loginResponse(ctx context.Context, c *app.RequestContext, code int, token s
 	}
 
 	req := rpc_user.GetUserReq{
-		UserId:   int32(userID),
-		IsSeller: c.GetBool("is_seller"),
+		UserId:      int32(userID),
+		IsSeller:    c.GetBool("is_seller"),
+		CheckSeller: true,
 	}
 
 	loginResp, err := clients.UserClient.GetUser(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))

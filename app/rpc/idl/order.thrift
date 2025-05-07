@@ -114,6 +114,7 @@ struct CreateOrderReq{
     2: list<i32> cartItemIDs;
     3: string phone;
     4: string order_address;
+    5: double TotalPrice;
 }
 struct CreateOrderResp{
     1: Order order;

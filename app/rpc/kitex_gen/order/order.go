@@ -4414,6 +4414,7 @@ type CreateOrderReq struct {
 	CartItemIDs  []int32 `thrift:"cartItemIDs,2" frugal:"2,default,list<i32>" json:"cartItemIDs"`
 	Phone        string  `thrift:"phone,3" frugal:"3,default,string" json:"phone"`
 	OrderAddress string  `thrift:"order_address,4" frugal:"4,default,string" json:"order_address"`
+	TotalPrice   float64 `thrift:"TotalPrice,5" frugal:"5,default,double" json:"TotalPrice"`
 }
 
 func NewCreateOrderReq() *CreateOrderReq {
@@ -4438,6 +4439,10 @@ func (p *CreateOrderReq) GetPhone() (v string) {
 func (p *CreateOrderReq) GetOrderAddress() (v string) {
 	return p.OrderAddress
 }
+
+func (p *CreateOrderReq) GetTotalPrice() (v float64) {
+	return p.TotalPrice
+}
 func (p *CreateOrderReq) SetUserId(val int32) {
 	p.UserId = val
 }
@@ -4450,12 +4455,16 @@ func (p *CreateOrderReq) SetPhone(val string) {
 func (p *CreateOrderReq) SetOrderAddress(val string) {
 	p.OrderAddress = val
 }
+func (p *CreateOrderReq) SetTotalPrice(val float64) {
+	p.TotalPrice = val
+}
 
 var fieldIDToName_CreateOrderReq = map[int16]string{
 	1: "user_id",
 	2: "cartItemIDs",
 	3: "phone",
 	4: "order_address",
+	5: "TotalPrice",
 }
 
 func (p *CreateOrderReq) Read(iprot thrift.TProtocol) (err error) {
@@ -4504,6 +4513,14 @@ func (p *CreateOrderReq) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 5:
+			if fieldTypeId == thrift.DOUBLE {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -4594,6 +4611,17 @@ func (p *CreateOrderReq) ReadField4(iprot thrift.TProtocol) error {
 	p.OrderAddress = _field
 	return nil
 }
+func (p *CreateOrderReq) ReadField5(iprot thrift.TProtocol) error {
+
+	var _field float64
+	if v, err := iprot.ReadDouble(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.TotalPrice = _field
+	return nil
+}
 
 func (p *CreateOrderReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -4616,6 +4644,10 @@ func (p *CreateOrderReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 	}
@@ -4712,6 +4744,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
+func (p *CreateOrderReq) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TotalPrice", thrift.DOUBLE, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteDouble(p.TotalPrice); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
 func (p *CreateOrderReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -4736,6 +4785,9 @@ func (p *CreateOrderReq) DeepEqual(ano *CreateOrderReq) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.OrderAddress) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.TotalPrice) {
 		return false
 	}
 	return true
@@ -4771,6 +4823,13 @@ func (p *CreateOrderReq) Field3DeepEqual(src string) bool {
 func (p *CreateOrderReq) Field4DeepEqual(src string) bool {
 
 	if strings.Compare(p.OrderAddress, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *CreateOrderReq) Field5DeepEqual(src float64) bool {
+
+	if p.TotalPrice != src {
 		return false
 	}
 	return true

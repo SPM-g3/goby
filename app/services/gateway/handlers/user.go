@@ -21,12 +21,9 @@ func HandleGetUser(ctx context.Context, c *app.RequestContext) {
 	userID := c.GetInt(consts.CONTEXT_UID_KEY)
 	req := rpc_user.GetUserReq{UserId: int32(userID)}
 	resp, err := clients.UserClient.GetUser(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
-	if err != nil {
+	if err != nil || !resp.Success {
 		utils.Fail(c, err.Error())
 		return
-	}
-	if !resp.Success {
-		utils.Fail(c, "not found")
 	}
 	utils.Success(c, utils.H{
 		"name":      resp.Username,
