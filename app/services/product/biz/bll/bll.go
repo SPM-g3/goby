@@ -28,7 +28,7 @@ func ListProduct(ctx context.Context) (*rpc_product.ListProductResp, error) {
 }
 
 func AdminListProduct(ctx context.Context, req *rpc_product.ListProductReq) (*rpc_product.ListProductResp, error) {
-	p, total, err := dao.AdminList(tidb.DB, int(req.PageNum), int(req.PageSize))
+	p, total, err := dao.AdminList(tidb.DB, int(req.PageNum), int(req.PageSize), int(req.SellerId))
 	if err != nil {
 		return nil, err
 	}

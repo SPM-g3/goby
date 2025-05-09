@@ -69,14 +69,14 @@ func ListUserOrder(db *gorm.DB, userID int, pageNum int, pageSize int) (*[]Order
 	return &orders, nil
 }
 
-func AdminListOrder(db *gorm.DB, pageNum int, pageSize int) (*[]Order, int64, error) {
+func AdminListOrder(db *gorm.DB, pageNum int, pageSize int, sellerID int) (*[]Order, int64, error) {
 	var orders []Order
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&orders).Error
+	err := db.Where("seller_id = ?", sellerID).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&orders).Error
 	if err != nil {
 		return nil, 0, err
 	}
 	var count int64
-	db.Model(&Order{}).Count(&count)
+	db.Model(&Order{}).Where("seller_id = ?", sellerID).Count(&count)
 	return &orders, count, nil
 }
 

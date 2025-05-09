@@ -197,8 +197,8 @@ func (bll *OrderBLL) UpdateOrderTracking(ctx context.Context, req *rpc_order.Upd
 	}, nil
 }
 
-func (bll *OrderBLL) AdminListOrder(ctx context.Context, req *rpc_order.ListOrderReq) (*rpc_order.ListOrderResp, error) {
-	orders, total, err := dao.AdminListOrder(tidb.DB, int(req.PageNum), int(req.PageSize))
+func (bll *OrderBLL) AdminListOrder(ctx context.Context, req *rpc_order.ListSellerOrderReq) (*rpc_order.ListOrderResp, error) {
+	orders, total, err := dao.AdminListOrder(tidb.DB, int(req.PageNum), int(req.PageSize), int(req.SellerId))
 	if err != nil {
 		return nil, err
 	}

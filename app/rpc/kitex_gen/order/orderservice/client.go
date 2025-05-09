@@ -16,7 +16,7 @@ type Client interface {
 	UpdateOrderAddress(ctx context.Context, req *order.UpdateOrderAddressReq, callOptions ...callopt.Option) (r *order.UpdateOrderAddressResp, err error)
 	GetOrder(ctx context.Context, req *order.GetOrderReq, callOptions ...callopt.Option) (r *order.GetOrderResp, err error)
 	ListUserOrder(ctx context.Context, req *order.ListOrderReq, callOptions ...callopt.Option) (r *order.ListOrderResp, err error)
-	AdminListOrder(ctx context.Context, req *order.ListOrderReq, callOptions ...callopt.Option) (r *order.ListOrderResp, err error)
+	AdminListOrder(ctx context.Context, req *order.ListSellerOrderReq, callOptions ...callopt.Option) (r *order.ListOrderResp, err error)
 	CreateUserAddress(ctx context.Context, req *order.CreateUserAddressReq, callOptions ...callopt.Option) (r *order.CreateUserAddressResp, err error)
 	DeleteUserAddress(ctx context.Context, req *order.DeleteUserAddressReq, callOptions ...callopt.Option) (r *order.DeleteUserAddressResp, err error)
 	UpdateUserAddress(ctx context.Context, req *order.UpdateUserAddressReq, callOptions ...callopt.Option) (r *order.UpdateUserAddressResp, err error)
@@ -81,7 +81,7 @@ func (p *kOrderServiceClient) ListUserOrder(ctx context.Context, req *order.List
 	return p.kClient.ListUserOrder(ctx, req)
 }
 
-func (p *kOrderServiceClient) AdminListOrder(ctx context.Context, req *order.ListOrderReq, callOptions ...callopt.Option) (r *order.ListOrderResp, err error) {
+func (p *kOrderServiceClient) AdminListOrder(ctx context.Context, req *order.ListSellerOrderReq, callOptions ...callopt.Option) (r *order.ListOrderResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.AdminListOrder(ctx, req)
 }

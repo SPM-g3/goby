@@ -186,6 +186,14 @@ func (p *Product) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -303,6 +311,17 @@ func (p *Product) ReadField8(iprot thrift.TProtocol) error {
 	p.IsDeleted = _field
 	return nil
 }
+func (p *Product) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SellerId = _field
+	return nil
+}
 
 func (p *Product) Write(oprot thrift.TProtocol) (err error) {
 
@@ -341,6 +360,10 @@ func (p *Product) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField8(oprot); err != nil {
 			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -497,6 +520,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
+func (p *Product) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("seller_id", thrift.I64, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.SellerId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
 func (p *Product) String() string {
 	if p == nil {
 		return "<nil>"
@@ -533,6 +573,9 @@ func (p *Product) DeepEqual(ano *Product) bool {
 		return false
 	}
 	if !p.Field8DeepEqual(ano.IsDeleted) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.SellerId) {
 		return false
 	}
 	return true
@@ -590,6 +633,13 @@ func (p *Product) Field7DeepEqual(src string) bool {
 func (p *Product) Field8DeepEqual(src bool) bool {
 
 	if p.IsDeleted != src {
+		return false
+	}
+	return true
+}
+func (p *Product) Field9DeepEqual(src int64) bool {
+
+	if p.SellerId != src {
 		return false
 	}
 	return true
@@ -2865,6 +2915,14 @@ func (p *CreateProductReq) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 6:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -2949,6 +3007,17 @@ func (p *CreateProductReq) ReadField5(iprot thrift.TProtocol) error {
 	p.Image = _field
 	return nil
 }
+func (p *CreateProductReq) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SellerId = _field
+	return nil
+}
 
 func (p *CreateProductReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -2975,6 +3044,10 @@ func (p *CreateProductReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -3080,6 +3153,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
+func (p *CreateProductReq) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("seller_id", thrift.I64, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.SellerId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
 func (p *CreateProductReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -3107,6 +3197,9 @@ func (p *CreateProductReq) DeepEqual(ano *CreateProductReq) bool {
 		return false
 	}
 	if !p.Field5DeepEqual(ano.Image) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.SellerId) {
 		return false
 	}
 	return true
@@ -3143,6 +3236,13 @@ func (p *CreateProductReq) Field4DeepEqual(src int32) bool {
 func (p *CreateProductReq) Field5DeepEqual(src string) bool {
 
 	if strings.Compare(p.Image, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *CreateProductReq) Field6DeepEqual(src int64) bool {
+
+	if p.SellerId != src {
 		return false
 	}
 	return true
@@ -5379,6 +5479,7 @@ func (p *SearchProductsResp) Field2DeepEqual(src int64) bool {
 type ListProductReq struct {
 	PageNum  int32 `thrift:"page_num,1" frugal:"1,default,i32" json:"page_num"`
 	PageSize int32 `thrift:"page_size,2" frugal:"2,default,i32" json:"page_size"`
+	SellerId int32 `thrift:"SellerId,3" frugal:"3,default,i32" json:"SellerId"`
 }
 
 func NewListProductReq() *ListProductReq {
@@ -5395,16 +5496,24 @@ func (p *ListProductReq) GetPageNum() (v int32) {
 func (p *ListProductReq) GetPageSize() (v int32) {
 	return p.PageSize
 }
+
+func (p *ListProductReq) GetSellerId() (v int32) {
+	return p.SellerId
+}
 func (p *ListProductReq) SetPageNum(val int32) {
 	p.PageNum = val
 }
 func (p *ListProductReq) SetPageSize(val int32) {
 	p.PageSize = val
 }
+func (p *ListProductReq) SetSellerId(val int32) {
+	p.SellerId = val
+}
 
 var fieldIDToName_ListProductReq = map[int16]string{
 	1: "page_num",
 	2: "page_size",
+	3: "SellerId",
 }
 
 func (p *ListProductReq) Read(iprot thrift.TProtocol) (err error) {
@@ -5437,6 +5546,14 @@ func (p *ListProductReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -5493,6 +5610,17 @@ func (p *ListProductReq) ReadField2(iprot thrift.TProtocol) error {
 	p.PageSize = _field
 	return nil
 }
+func (p *ListProductReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int32
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SellerId = _field
+	return nil
+}
 
 func (p *ListProductReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -5507,6 +5635,10 @@ func (p *ListProductReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -5561,6 +5693,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *ListProductReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SellerId", thrift.I32, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.SellerId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *ListProductReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -5581,6 +5730,9 @@ func (p *ListProductReq) DeepEqual(ano *ListProductReq) bool {
 	if !p.Field2DeepEqual(ano.PageSize) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.SellerId) {
+		return false
+	}
 	return true
 }
 
@@ -5594,6 +5746,13 @@ func (p *ListProductReq) Field1DeepEqual(src int32) bool {
 func (p *ListProductReq) Field2DeepEqual(src int32) bool {
 
 	if p.PageSize != src {
+		return false
+	}
+	return true
+}
+func (p *ListProductReq) Field3DeepEqual(src int32) bool {
+
+	if p.SellerId != src {
 		return false
 	}
 	return true

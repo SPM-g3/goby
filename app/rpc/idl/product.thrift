@@ -133,6 +133,7 @@ struct SearchProductsResp {
 struct ListProductReq {
     1: i32 page_num;
     2: i32 page_size;
+    3: i32 SellerId;
 }
 
 struct ListProductResp {

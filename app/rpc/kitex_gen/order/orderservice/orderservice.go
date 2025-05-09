@@ -489,7 +489,7 @@ func (p *kClient) ListUserOrder(ctx context.Context, req *order.ListOrderReq) (r
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) AdminListOrder(ctx context.Context, req *order.ListOrderReq) (r *order.ListOrderResp, err error) {
+func (p *kClient) AdminListOrder(ctx context.Context, req *order.ListSellerOrderReq) (r *order.ListOrderResp, err error) {
 	var _args order.OrderServiceAdminListOrderArgs
 	_args.Req = req
 	var _result order.OrderServiceAdminListOrderResult

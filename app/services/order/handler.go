@@ -39,7 +39,7 @@ func (*OrderServiceImpl) UpdateOrderAddress(ctx context.Context, req *rpc_order.
 	return orderBll.UpdateOrderAddress(ctx, req)
 }
 
-func (*OrderServiceImpl) AdminListOrder(ctx context.Context, req *rpc_order.ListOrderReq) (*rpc_order.ListOrderResp, error) {
+func (*OrderServiceImpl) AdminListOrder(ctx context.Context, req *rpc_order.ListSellerOrderReq) (*rpc_order.ListOrderResp, error) {
 	return orderBll.AdminListOrder(ctx, req)
 }
 

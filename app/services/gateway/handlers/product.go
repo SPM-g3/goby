@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"context"
-	"github.com/bitdance-panic/gobuy/app/consts"
 	"strconv"
 	"time"
+
+	"github.com/bitdance-panic/gobuy/app/consts"
 
 	rpc_product "github.com/bitdance-panic/gobuy/app/rpc/kitex_gen/product"
 	clients "github.com/bitdance-panic/gobuy/app/services/gateway/biz/clients"
@@ -12,6 +13,7 @@ import (
 	"github.com/bitdance-panic/gobuy/app/services/gateway/biz/dao"
 	"github.com/bitdance-panic/gobuy/app/utils"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/client/callopt"
 )
 
@@ -55,12 +57,6 @@ func HandleCreateProduct(ctx context.Context, c *app.RequestContext) {
 	}
 	userID := c.GetInt(consts.CONTEXT_UID_KEY)
 	req.SellerId = int64(userID)
-	req.Name = c.Query("name")
-	req.Description = c.Query("description")
-	req.Price, _ = strconv.ParseFloat(c.Query("price"), 64)
-	req.Image = c.Query("image")
-	stock, _ := strconv.ParseInt(c.Query("stock"), 10, 32)
-	req.Stock = int32(stock)
 
 	resp, err := clients.ProductClient.CreateProduct(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
 	if err != nil {
@@ -203,6 +199,8 @@ func HandleListAllProduct(ctx context.Context, c *app.RequestContext) {
 // @Router /product/search [get]
 func HandleAdminListProduct(ctx context.Context, c *app.RequestContext) {
 	pageNum, err := strconv.Atoi(c.Query("page"))
+	sellerID := c.GetInt(consts.CONTEXT_UID_KEY)
+	hlog.Info("111111111111111sellerID: %d", sellerID)
 	if err != nil {
 		utils.Fail(c, err.Error())
 		return
@@ -215,6 +213,7 @@ func HandleAdminListProduct(ctx context.Context, c *app.RequestContext) {
 	req := rpc_product.ListProductReq{
 		PageNum:  int32(pageNum),
 		PageSize: int32(pageSize),
+		SellerId: int32(sellerID),
 	}
 	resp, err := clients.ProductClient.AdminListProduct(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
 	if err != nil {

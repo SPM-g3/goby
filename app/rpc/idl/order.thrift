@@ -6,7 +6,7 @@ service OrderService{
     UpdateOrderAddressResp updateOrderAddress(1:UpdateOrderAddressReq req);
     GetOrderResp getOrder(1: GetOrderReq req);
     ListOrderResp listUserOrder(1: ListOrderReq req);
-    ListOrderResp adminListOrder(1: ListOrderReq req);
+    ListOrderResp adminListOrder(1: ListSellerOrderReq req);
     CreateUserAddressResp createUserAddress(1: CreateUserAddressReq req);
     DeleteUserAddressResp deleteUserAddress(1: DeleteUserAddressReq req);
     UpdateUserAddressResp updateUserAddress(1: UpdateUserAddressReq req);
@@ -141,6 +141,11 @@ struct UpdateOrderStatusResp{
 }
 struct ListOrderReq{
     1: i32 user_id;
+    2: i32 page_num;
+    3: i32 page_size;
+}
+struct ListSellerOrderReq{
+    1: i32 seller_id;
     2: i32 page_num;
     3: i32 page_size;
 }

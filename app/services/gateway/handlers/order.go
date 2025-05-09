@@ -230,6 +230,7 @@ func HandleListUserOrder(ctx context.Context, c *app.RequestContext) {
 
 func HandleAdminListOrder(ctx context.Context, c *app.RequestContext) {
 	pageNum, err := strconv.Atoi(c.Query("page"))
+	sellerID := c.GetInt(consts.CONTEXT_UID_KEY)
 	if err != nil {
 		utils.Fail(c, err.Error())
 		return
@@ -239,7 +240,8 @@ func HandleAdminListOrder(ctx context.Context, c *app.RequestContext) {
 		utils.Fail(c, err.Error())
 		return
 	}
-	req := rpc_order.ListOrderReq{
+	req := rpc_order.ListSellerOrderReq{
+		SellerId: int32(sellerID),
 		PageNum:  int32(pageNum),
 		PageSize: int32(pageSize),
 	}
