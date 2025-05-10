@@ -13,6 +13,7 @@ import (
 type (
 	Order       = models.Order
 	UserAddress = models.UserAddress
+	Product     = models.Product
 )
 
 func CreateOrder(db *gorm.DB, order *Order) error {
@@ -20,6 +21,19 @@ func CreateOrder(db *gorm.DB, order *Order) error {
 		return err
 	}
 	return nil
+}
+
+func GetByID(db *gorm.DB, id int) (*int, error) {
+	var product Product
+	if err := db.First(&product, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 处理记录未找到的情况
+			return nil, nil
+		}
+		// 处理其他错误
+		return nil, err
+	}
+	return &product.SellerID, nil
 }
 
 func SaveOrder(db *gorm.DB, order *Order) error {

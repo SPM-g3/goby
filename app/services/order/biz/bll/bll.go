@@ -48,6 +48,20 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 			return nil, err
 		}
 		cartItem := resp.Item
+
+		sellerID, err := dao.GetByID(tidb.DB, int(cartItem.ProductId))
+		if err != nil {
+			return nil, err
+		}
+		if sellerID == nil {
+			return nil, fmt.Errorf("product's sellerID %d not found", cartItem.ProductId)
+		}
+
+		if *sellerID == int(req.UserId) {
+			// 卖家和用户是同一个人，跳过此商品
+			continue
+		}
+
 		orderItem := models.OrderItem{
 			ProductID:    int(cartItem.ProductId),
 			ProductName:  cartItem.Name,
