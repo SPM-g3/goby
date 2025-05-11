@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	gconsts "github.com/bitdance-panic/gobuy/app/consts"
@@ -25,11 +24,6 @@ func HandleRegister(ctx context.Context, c *app.RequestContext) {
 		utils.Fail(c, err.Error())
 		return
 	}
-
-	req.Email = c.Query("email")
-	req.Password = c.Query("password")
-	req.IsSeller, _ = strconv.ParseBool(c.Query("is_seller"))
-	req.Username = c.Query("username")
 
 	resp, err := clients.UserClient.Register(context.Background(), &req, callopt.WithRPCTimeout(5*time.Second))
 	if err != nil || !resp.Success {

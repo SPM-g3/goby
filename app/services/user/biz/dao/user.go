@@ -2,7 +2,6 @@ package dao
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/bitdance-panic/gobuy/app/models"
@@ -25,7 +24,7 @@ func RegisterUser(db *gorm.DB, ctx context.Context, username, password, email st
 	// 插入新用户
 	err := db.WithContext(ctx).Create(user).Error
 	if err != nil {
-		return nil, fmt.Errorf("Email is already in use")
+		return nil, err
 	}
 
 	return user, nil
