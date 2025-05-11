@@ -23,7 +23,7 @@ func CreateOrder(db *gorm.DB, order *Order) error {
 	return nil
 }
 
-func GetByID(db *gorm.DB, id int) (*int, error) {
+func GetByID(db *gorm.DB, id int) (*Product, error) {
 	var product Product
 	if err := db.First(&product, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -33,7 +33,7 @@ func GetByID(db *gorm.DB, id int) (*int, error) {
 		// 处理其他错误
 		return nil, err
 	}
-	return &product.SellerID, nil
+	return &product, nil
 }
 
 func SaveOrder(db *gorm.DB, order *Order) error {

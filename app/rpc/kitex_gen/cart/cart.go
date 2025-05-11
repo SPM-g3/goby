@@ -17,6 +17,7 @@ type CartItem struct {
 	Image     string  `thrift:"image,5" frugal:"5,default,string" json:"image"`
 	Valid     bool    `thrift:"valid,6" frugal:"6,default,bool" json:"valid"`
 	ProductId int32   `thrift:"product_id,7" frugal:"7,default,i32" json:"product_id"`
+	SellerId  int32   `thrift:"seller_id,8" frugal:"8,default,i32" json:"seller_id"`
 }
 
 func NewCartItem() *CartItem {
@@ -53,6 +54,10 @@ func (p *CartItem) GetValid() (v bool) {
 func (p *CartItem) GetProductId() (v int32) {
 	return p.ProductId
 }
+
+func (p *CartItem) GetSellerId() (v int32) {
+	return p.SellerId
+}
 func (p *CartItem) SetId(val int32) {
 	p.Id = val
 }
@@ -74,6 +79,9 @@ func (p *CartItem) SetValid(val bool) {
 func (p *CartItem) SetProductId(val int32) {
 	p.ProductId = val
 }
+func (p *CartItem) SetSellerId(val int32) {
+	p.SellerId = val
+}
 
 var fieldIDToName_CartItem = map[int16]string{
 	1: "id",
@@ -83,6 +91,7 @@ var fieldIDToName_CartItem = map[int16]string{
 	5: "image",
 	6: "valid",
 	7: "product_id",
+	8: "seller_id",
 }
 
 func (p *CartItem) Read(iprot thrift.TProtocol) (err error) {
@@ -155,6 +164,14 @@ func (p *CartItem) Read(iprot thrift.TProtocol) (err error) {
 		case 7:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -266,6 +283,17 @@ func (p *CartItem) ReadField7(iprot thrift.TProtocol) error {
 	p.ProductId = _field
 	return nil
 }
+func (p *CartItem) ReadField8(iprot thrift.TProtocol) error {
+
+	var _field int32
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SellerId = _field
+	return nil
+}
 
 func (p *CartItem) Write(oprot thrift.TProtocol) (err error) {
 
@@ -300,6 +328,10 @@ func (p *CartItem) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
 			goto WriteFieldError
 		}
 	}
@@ -439,6 +471,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
+func (p *CartItem) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("seller_id", thrift.I32, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.SellerId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
 func (p *CartItem) String() string {
 	if p == nil {
 		return "<nil>"
@@ -472,6 +521,9 @@ func (p *CartItem) DeepEqual(ano *CartItem) bool {
 		return false
 	}
 	if !p.Field7DeepEqual(ano.ProductId) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.SellerId) {
 		return false
 	}
 	return true
@@ -522,6 +574,13 @@ func (p *CartItem) Field6DeepEqual(src bool) bool {
 func (p *CartItem) Field7DeepEqual(src int32) bool {
 
 	if p.ProductId != src {
+		return false
+	}
+	return true
+}
+func (p *CartItem) Field8DeepEqual(src int32) bool {
+
+	if p.SellerId != src {
 		return false
 	}
 	return true

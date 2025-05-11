@@ -8,6 +8,7 @@ struct CartItem {
     5: string image;
     6: bool valid;
     7: i32 product_id;
+    8: i32 seller_id
 }
 
 service CartService {

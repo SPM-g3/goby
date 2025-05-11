@@ -659,6 +659,7 @@ type Order struct {
 	Phone          string       `thrift:"phone,11" frugal:"11,default,string" json:"phone"`
 	Address        string       `thrift:"address,12" frugal:"12,default,string" json:"address"`
 	TrackingNumber string       `thrift:"tracking_number,13" frugal:"13,default,string" json:"tracking_number"`
+	SellerId       int32        `thrift:"seller_id,14" frugal:"14,default,i32" json:"seller_id"`
 }
 
 func NewOrder() *Order {
@@ -719,6 +720,10 @@ func (p *Order) GetAddress() (v string) {
 func (p *Order) GetTrackingNumber() (v string) {
 	return p.TrackingNumber
 }
+
+func (p *Order) GetSellerId() (v int32) {
+	return p.SellerId
+}
 func (p *Order) SetId(val int32) {
 	p.Id = val
 }
@@ -758,6 +763,9 @@ func (p *Order) SetAddress(val string) {
 func (p *Order) SetTrackingNumber(val string) {
 	p.TrackingNumber = val
 }
+func (p *Order) SetSellerId(val int32) {
+	p.SellerId = val
+}
 
 var fieldIDToName_Order = map[int16]string{
 	1:  "id",
@@ -773,6 +781,7 @@ var fieldIDToName_Order = map[int16]string{
 	11: "phone",
 	12: "address",
 	13: "tracking_number",
+	14: "seller_id",
 }
 
 func (p *Order) Read(iprot thrift.TProtocol) (err error) {
@@ -893,6 +902,14 @@ func (p *Order) Read(iprot thrift.TProtocol) (err error) {
 		case 13:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField13(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 14:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1082,6 +1099,17 @@ func (p *Order) ReadField13(iprot thrift.TProtocol) error {
 	p.TrackingNumber = _field
 	return nil
 }
+func (p *Order) ReadField14(iprot thrift.TProtocol) error {
+
+	var _field int32
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SellerId = _field
+	return nil
+}
 
 func (p *Order) Write(oprot thrift.TProtocol) (err error) {
 
@@ -1140,6 +1168,10 @@ func (p *Order) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField13(oprot); err != nil {
 			fieldId = 13
+			goto WriteFieldError
+		}
+		if err = p.writeField14(oprot); err != nil {
+			fieldId = 14
 			goto WriteFieldError
 		}
 	}
@@ -1389,6 +1421,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 13 end error: ", p), err)
 }
 
+func (p *Order) writeField14(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("seller_id", thrift.I32, 14); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(p.SellerId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 end error: ", p), err)
+}
+
 func (p *Order) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1440,6 +1489,9 @@ func (p *Order) DeepEqual(ano *Order) bool {
 		return false
 	}
 	if !p.Field13DeepEqual(ano.TrackingNumber) {
+		return false
+	}
+	if !p.Field14DeepEqual(ano.SellerId) {
 		return false
 	}
 	return true
@@ -1538,6 +1590,13 @@ func (p *Order) Field12DeepEqual(src string) bool {
 func (p *Order) Field13DeepEqual(src string) bool {
 
 	if strings.Compare(p.TrackingNumber, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Order) Field14DeepEqual(src int32) bool {
+
+	if p.SellerId != src {
 		return false
 	}
 	return true

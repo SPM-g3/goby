@@ -32,6 +32,10 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		return nil, err
 	}
 	orderItems := make([]models.OrderItem, len(req.CartItemIDs))
+
+	// 用于检查卖家ID
+	var sellerID int64 = -1
+
 	for i, cartItemID := range req.CartItemIDs {
 		resp, err := clients.CartClient.GetItem(
 			ctx,
@@ -40,26 +44,20 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		if err != nil {
 			return nil, err
 		}
-		_, err2 := clients.CartClient.DeleteItem(
-			ctx,
-			&rpc_cart.DeleteItemReq{ItemId: cartItemID},
-		)
-		if err2 != nil {
-			return nil, err
-		}
+
 		cartItem := resp.Item
 
-		sellerID, err := dao.GetByID(tidb.DB, int(cartItem.ProductId))
+		// 获取商品信息以检查卖家ID
+		productResp, err := dao.GetByID(tidb.DB, int(cartItem.ProductId))
 		if err != nil {
 			return nil, err
 		}
-		if sellerID == nil {
-			return nil, fmt.Errorf("product's sellerID %d not found", cartItem.ProductId)
-		}
 
-		if *sellerID == int(req.UserId) {
-			// 卖家和用户是同一个人，跳过此商品
-			continue
+		// 检查卖家ID
+		if sellerID == -1 {
+			sellerID = int64(productResp.SellerID)
+		} else if sellerID != int64(productResp.SellerID) {
+			return nil, errors.New("订单中的商品必须来自同一个卖家")
 		}
 
 		orderItem := models.OrderItem{
@@ -82,6 +80,17 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		// 	return nil, errors.New("handle decimal is not exact")
 		// }
 	}
+
+	for _, item := range req.CartItemIDs {
+		_, err := clients.CartClient.DeleteItem(
+			ctx,
+			&rpc_cart.DeleteItemReq{ItemId: int32(item)},
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// 先保存下订单
 	order := models.Order{
 		UserID:     int(req.UserId),
@@ -91,6 +100,7 @@ func (bll *OrderBLL) CreateOrder(ctx context.Context, req *rpc_order.CreateOrder
 		PayTime:    nil,
 		Phone:      req.Phone,
 		Address:    req.OrderAddress,
+		SellerID:   int(sellerID), // 设置卖家ID
 	}
 
 	err = dao.CreateOrder(tidb.DB, &order)
@@ -240,15 +250,13 @@ func convertItemFromProto(items rpc_order.OrderItem) *models.OrderItem {
 
 func convertItemToProto(items models.OrderItem) *rpc_order.OrderItem {
 	return &rpc_order.OrderItem{
-		OrderId:        int32(items.OrderID),
-		ProductId:      int32(items.ProductID),
-		ItemStatus:     items.ItemStatus,
-		ShippedAt:      items.ShippedAt,
-		TrackingNumber: items.TrackingNumber,
-		Quantity:       int32(items.Quantity),
-		Price:          items.Price,
-		ProductName:    items.ProductName,
-		ProductImage:   items.ProductImage,
+		OrderId:      int32(items.OrderID),
+		ProductId:    int32(items.ProductID),
+		ItemStatus:   items.ItemStatus,
+		Quantity:     int32(items.Quantity),
+		Price:        items.Price,
+		ProductName:  items.ProductName,
+		ProductImage: items.ProductImage,
 	}
 }
 
@@ -271,6 +279,7 @@ func convertOrderToProto(order *models.Order) *rpc_order.Order {
 		Phone:          order.Phone,
 		Address:        order.Address,
 		TrackingNumber: order.TrackingNumber,
+		SellerId:       int32(order.SellerID),
 	}
 }
 

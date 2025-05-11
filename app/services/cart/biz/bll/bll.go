@@ -98,5 +98,6 @@ func convertToProtoCartItem(item *models.CartItem) *rpc_cart.CartItem {
 		Image:     item.Product.Image,
 		Valid:     valid,
 		ProductId: int32(item.ProductID),
+		SellerId:  int32(item.Product.SellerID),
 	}
 }

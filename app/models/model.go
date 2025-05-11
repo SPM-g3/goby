@@ -100,17 +100,15 @@ type Order struct {
 
 type OrderItem struct {
 	Base
-	OrderID        int  // 订单 ID
-	ProductID      int  // 商品 ID
-	ItemStatus     bool // 商品状态
-	ShippedAt      string
-	TrackingNumber string
-	Quantity       int     `gorm:"not null"`             // 商品数量
-	Price          float64 `gorm:"not null"`             // 商品单价
-	Product        Product `gorm:"foreignKey:ProductID"` // 关联商品
-	Order          Order   `gorm:"foreignKey:OrderID"`   // 关联订单
-	ProductName    string
-	ProductImage   string
+	OrderID      int     // 订单 ID
+	ProductID    int     // 商品 ID
+	ItemStatus   bool    // 商品状态
+	Quantity     int     `gorm:"not null"`             // 商品数量
+	Price        float64 `gorm:"not null"`             // 商品单价
+	Product      Product `gorm:"foreignKey:ProductID"` // 关联商品
+	Order        Order   `gorm:"foreignKey:OrderID"`   // 关联订单
+	ProductName  string
+	ProductImage string
 }
 
 type UserAddress struct {

@@ -44,6 +44,7 @@ struct Order{
     11: string phone;
     12: string address;
     13: string tracking_number;
+    14: i32 seller_id;
 }
 
 struct UserAddress{
