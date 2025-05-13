@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net"
 	"strings"
 	"time"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 
 	"github.com/bitdance-panic/gobuy/app/common/mtl"
 	"github.com/bitdance-panic/gobuy/app/services/gateway/biz/dal"
@@ -213,6 +214,7 @@ func registerRoutes(h *server.Hertz) {
 	{
 		// 获取单个商品详情
 		productGroup.GET("/:id", handlers.HandleGetProduct)
+		productGroup.POST("/reviews", handlers.HandlePostProductReviews)
 		// 获取商品评论
 		productGroup.GET("/:id/reviews", handlers.HandleGetProductReviews)
 		// 促销活动

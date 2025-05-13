@@ -10,6 +10,7 @@ struct RegisterReq {
 struct RegisterResp {
     1: i32 user_id
     2: bool success
+    3: 
 }
 
 struct SellerReq {
