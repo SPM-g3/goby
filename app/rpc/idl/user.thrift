@@ -10,7 +10,6 @@ struct RegisterReq {
 struct RegisterResp {
     1: i32 user_id
     2: bool success
-    3: 
 }
 
 struct SellerReq {
@@ -58,6 +57,7 @@ struct User {
 struct AdminListUserReq {
     1: i32 page_num
     2: i32 page_size
+    3: bool is_seller
 }
 
 

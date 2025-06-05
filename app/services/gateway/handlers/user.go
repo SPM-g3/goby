@@ -66,9 +66,12 @@ func HandleAdminListUser(ctx context.Context, c *app.RequestContext) {
 		utils.Fail(c, err.Error())
 		return
 	}
+	is_seller, err := strconv.Atoi(c.Query("is_seller"))
+
 	req := rpc_user.AdminListUserReq{
 		PageNum:  int32(pageNum),
 		PageSize: int32(pageSize),
+		IsSeller: is_seller == 1,
 	}
 	resp, err := clients.UserClient.AdminListUser(context.Background(), &req, callopt.WithRPCTimeout(10*time.Second))
 	if err != nil {

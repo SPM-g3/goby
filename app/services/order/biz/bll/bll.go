@@ -400,9 +400,9 @@ func (bll *OrderBLL) GenerateSalesReport(ctx context.Context, req *rpc_order.Sal
 
 	for _, order := range *orders {
 		// 累加总销售额
-		totalRevenue += order.TotalPrice
+		totalRevenue += order.TotalPrice - order.Discount
 		orderDate := order.CreatedAt.Format("2006-01-02")
-		dailyRevenue[orderDate] += order.TotalPrice
+		dailyRevenue[orderDate] += order.TotalPrice - order.Discount
 
 		// 统计每个产品的销量
 		for _, item := range order.Items {

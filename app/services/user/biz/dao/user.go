@@ -40,10 +40,10 @@ func Seller(db *gorm.DB, ctx context.Context, userID int32) (bool, error) {
 }
 
 // 查询所有用户信息，并进行分页
-func AdminListUser(db *gorm.DB, ctx context.Context, page int, pageSize int) ([]User, int64, error) {
+func AdminListUser(db *gorm.DB, ctx context.Context, page int, pageSize int, isSeller bool) ([]User, int64, error) {
 	var users []User
 	offset := (page - 1) * pageSize
-	err := db.WithContext(ctx).Limit(pageSize).Offset(offset).Find(&users).Error
+	err := db.WithContext(ctx).Limit(pageSize).Offset(offset).Where("is_seller = ?", isSeller).Find(&users).Error
 	if err != nil {
 		return nil, 0, err
 	}

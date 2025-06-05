@@ -2521,6 +2521,7 @@ func (p *User) Field4DeepEqual(src string) bool {
 type AdminListUserReq struct {
 	PageNum  int32 `thrift:"page_num,1" frugal:"1,default,i32" json:"page_num"`
 	PageSize int32 `thrift:"page_size,2" frugal:"2,default,i32" json:"page_size"`
+	IsSeller bool  `thrift:"is_seller,3" frugal:"3,default,bool" json:"is_seller"`
 }
 
 func NewAdminListUserReq() *AdminListUserReq {
@@ -2537,16 +2538,24 @@ func (p *AdminListUserReq) GetPageNum() (v int32) {
 func (p *AdminListUserReq) GetPageSize() (v int32) {
 	return p.PageSize
 }
+
+func (p *AdminListUserReq) GetIsSeller() (v bool) {
+	return p.IsSeller
+}
 func (p *AdminListUserReq) SetPageNum(val int32) {
 	p.PageNum = val
 }
 func (p *AdminListUserReq) SetPageSize(val int32) {
 	p.PageSize = val
 }
+func (p *AdminListUserReq) SetIsSeller(val bool) {
+	p.IsSeller = val
+}
 
 var fieldIDToName_AdminListUserReq = map[int16]string{
 	1: "page_num",
 	2: "page_size",
+	3: "is_seller",
 }
 
 func (p *AdminListUserReq) Read(iprot thrift.TProtocol) (err error) {
@@ -2579,6 +2588,14 @@ func (p *AdminListUserReq) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2635,6 +2652,17 @@ func (p *AdminListUserReq) ReadField2(iprot thrift.TProtocol) error {
 	p.PageSize = _field
 	return nil
 }
+func (p *AdminListUserReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSeller = _field
+	return nil
+}
 
 func (p *AdminListUserReq) Write(oprot thrift.TProtocol) (err error) {
 
@@ -2649,6 +2677,10 @@ func (p *AdminListUserReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -2703,6 +2735,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *AdminListUserReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("is_seller", thrift.BOOL, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSeller); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *AdminListUserReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -2723,6 +2772,9 @@ func (p *AdminListUserReq) DeepEqual(ano *AdminListUserReq) bool {
 	if !p.Field2DeepEqual(ano.PageSize) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.IsSeller) {
+		return false
+	}
 	return true
 }
 
@@ -2736,6 +2788,13 @@ func (p *AdminListUserReq) Field1DeepEqual(src int32) bool {
 func (p *AdminListUserReq) Field2DeepEqual(src int32) bool {
 
 	if p.PageSize != src {
+		return false
+	}
+	return true
+}
+func (p *AdminListUserReq) Field3DeepEqual(src bool) bool {
+
+	if p.IsSeller != src {
 		return false
 	}
 	return true
